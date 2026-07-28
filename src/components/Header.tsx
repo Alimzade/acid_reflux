@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ProjectInfo } from '../types';
+import { IconGlobe } from './Icons';
 
 interface HeaderProps {
   info: ProjectInfo;
-  activeTab: 'concept' | 'territory';
-  setActiveTab: (tab: 'concept' | 'territory') => void;
+  sidebarCollapsed: boolean;
+  setSidebarCollapsed: (collapsed: boolean) => void;
 }
 
 const COLOR_PALETTE = [
@@ -16,7 +17,7 @@ const COLOR_PALETTE = [
   { name: 'Tactical Red', color: '#ef4444', glow: 'rgba(239, 68, 68, 0.5)' }
 ];
 
-export const Header: React.FC<HeaderProps> = ({ info, activeTab, setActiveTab }) => {
+export const Header: React.FC<HeaderProps> = ({ info, sidebarCollapsed, setSidebarCollapsed }) => {
   const [now, setNow] = useState(() => new Date());
   const [colorIdx, setColorIdx] = useState(0);
 
@@ -57,7 +58,6 @@ export const Header: React.FC<HeaderProps> = ({ info, activeTab, setActiveTab })
   return (
     <header className="header">
       <div className="brand">
-        <h1 className="brand-title">🧪 {info.name}</h1>
         <span className="badge badge-active">Active Collaboration</span>
       </div>
       <div className="header-right">
@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({ info, activeTab, setActiveTab })
           
           <div className="clock-tz-trigger-wrapper">
             <button className="clock-tz-square-btn" aria-label="Timezone Information">
-              🌐
+              <IconGlobe size={15} />
             </button>
             <div className="clock-tooltip">
               <div className="tooltip-row">
@@ -103,21 +103,6 @@ export const Header: React.FC<HeaderProps> = ({ info, activeTab, setActiveTab })
             </div>
           </div>
         </div>
-
-        <nav className="nav-tabs">
-          <button
-            className={`tab-btn ${activeTab === 'concept' ? 'active' : ''}`}
-            onClick={() => setActiveTab('concept')}
-          >
-            📘 Concept &amp; Ethos
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'territory' ? 'active' : ''}`}
-            onClick={() => setActiveTab('territory')}
-          >
-            🗺️ Territory Claims (DB)
-          </button>
-        </nav>
       </div>
     </header>
   );
