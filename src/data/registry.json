@@ -1,0 +1,16 @@
+{
+  "project": "acid_reflux",
+  "tagline": "Uncoordinated Collaboration in Harmony",
+  "lastUpdated": "2026-07-28",
+  "claims": [
+    {
+      "id": "claim-1",
+      "developer": "Anar & AI Pair",
+      "aiAgent": "Antigravity",
+      "folder": "src/features/guide-in-chaos",
+      "title": "Guide in Chaos Dashboard",
+      "description": "Interactive registry board & rulebook for active collaborators.",
+      "status": "active"
+    }
+  ]
+}
