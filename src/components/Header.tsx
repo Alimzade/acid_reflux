@@ -94,7 +94,15 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="header">
       <div className="brand">
-        <span className="badge badge-active">{copy.collaboration}</span>
+        <button
+          type="button"
+          className="hamburger-btn mobile-only"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          aria-label="Toggle menu"
+        >
+          <span /><span /><span />
+        </button>
+        <span className="badge badge-active header-badge">{copy.collaboration}</span>
       </div>
       <div className="header-right">
         <div className="language-switch" role="group" aria-label={copy.language}>
