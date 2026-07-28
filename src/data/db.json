@@ -1,0 +1,19 @@
+{
+  "projectInfo": {
+    "name": "acid_reflux",
+    "tagline": "Uncoordinated Collaboration in Harmony",
+    "ethos": "Polite manners, continuous AI context, and frequent git synchronization."
+  },
+  "claims": [
+    {
+      "id": "claim-101",
+      "developer": "Anar & AI Pair",
+      "aiAgent": "Antigravity",
+      "reservedPath": "src/features/guide-in-chaos",
+      "title": "Guide in Chaos Dashboard",
+      "description": "Territory reservation board & interactive concept documentation UI.",
+      "status": "active",
+      "timestamp": "2026-07-28"
+    }
+  ]
+}
