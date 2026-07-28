@@ -470,6 +470,33 @@ body {
   margin-top: 1rem;
 }
 
+.intelligence-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.ai-pulse {
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ai-pulse .section-kicker,
+.ai-pulse .read-story {
+  color: var(--accent-purple);
+}
+
+.ai-pulse .refresh-btn {
+  background: rgba(168, 85, 247, 0.09);
+  border-color: rgba(168, 85, 247, 0.35);
+}
+
+.ai-pulse .featured-story {
+  background:
+    radial-gradient(circle at 80% 15%, rgba(6, 182, 212, 0.2), transparent 38%),
+    linear-gradient(145deg, #131126, #080b13);
+}
+
 .market-pulse-header {
   display: flex;
   align-items: flex-end;
