@@ -1,259 +1,191 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import pulseData from '../data/pulse.json';
+import { IconChevronLeft, IconChevronRight } from './Icons';
 
 type Impact = 'High' | 'Medium' | 'Low';
 type Sentiment = 'Positive' | 'Negative' | 'Mixed';
-type Category = 'Macro' | 'Stocks' | 'Crypto' | 'Energy' | 'Geopolitics';
+type MarketCategory = 'Macro' | 'Stocks' | 'Crypto' | 'Energy' | 'Geopolitics';
+type AiCategory = 'Models' | 'Research' | 'Funding' | 'Chips' | 'Policy' | 'Products';
+type StoryCategory = MarketCategory | AiCategory;
 
-interface GdeltArticle {
+interface PulseStory {
   url: string;
   url_mobile?: string;
   title: string;
   seendate: string;
-  socialimage?: string;
   domain: string;
-  sourcecountry?: string;
-}
-
-interface GdeltResponse {
-  articles?: GdeltArticle[];
-}
-
-interface MarketStory extends GdeltArticle {
   impact: Impact;
   sentiment: Sentiment;
-  category: Category;
+  category: StoryCategory;
   tickers: string[];
-  score: number;
+  socialimage?: string;
 }
 
-interface CacheEntry {
-  savedAt: number;
-  stories: MarketStory[];
-}
-
-const CACHE_KEY = 'acid-reflux-market-pulse-v1';
-const CACHE_TTL = 10 * 60 * 1000;
-const REFRESH_INTERVAL = 15 * 60 * 1000;
-const QUERY = [
-  'inflation',
-  '"interest rates"',
-  '"central bank"',
-  'tariffs',
-  'recession',
-  '"stock market"',
-  'earnings',
-  'oil',
-  'sanctions',
-  'bitcoin'
-].join(' OR ');
-
-const API_URL =
-  `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(`(${QUERY}) sourcelang:english`)}` +
-  '&mode=artlist&maxrecords=50&format=jsonp&sort=datedesc&timespan=24h';
-
-let activeGdeltRequest: Promise<GdeltResponse> | null = null;
-
-const categoryRules: Array<[Category, RegExp]> = [
-  ['Crypto', /\b(bitcoin|crypto|ethereum|blockchain|btc|eth)\b/i],
-  ['Energy', /\b(oil|gas|opec|energy|crude|lng)\b/i],
-  ['Geopolitics', /\b(war|sanction|tariff|conflict|nato|trade deal|embargo)\b/i],
-  ['Stocks', /\b(stock|shares|earnings|nasdaq|s&p|dow|ipo|merger)\b/i]
-];
-
-const tickerRules: Array<[string, RegExp]> = [
-  ['BTC', /\b(bitcoin|btc)\b/i],
-  ['ETH', /\b(ethereum|eth)\b/i],
-  ['AAPL', /\b(apple|aapl)\b/i],
-  ['MSFT', /\b(microsoft|msft)\b/i],
-  ['NVDA', /\b(nvidia|nvda)\b/i],
-  ['TSLA', /\b(tesla|tsla)\b/i],
-  ['AMZN', /\b(amazon|amzn)\b/i],
-  ['GOOGL', /\b(google|alphabet|googl)\b/i],
-  ['META', /\b(meta|facebook)\b/i],
-  ['EUR/USD', /\b(euro|ecb|european central bank)\b/i],
-  ['USD/JPY', /\b(yen|bank of japan|boj)\b/i],
-  ['OIL', /\b(oil|crude|opec)\b/i]
-];
-
-function parseGdeltDate(value: string): Date {
-  const match = value.match(/^(\d{4})(\d{2})(\d{2})T?(\d{2})(\d{2})(\d{2})Z?$/);
-
-  if (!match) return new Date(value);
-
-  const [, year, month, day, hour, minute, second] = match;
-  return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}Z`);
-}
-
-function relativeTime(value: string): string {
-  const date = parseGdeltDate(value);
-  const minutes = Math.max(1, Math.round((Date.now() - date.getTime()) / 60000));
-
-  if (Number.isNaN(minutes)) return 'Recently';
-  if (minutes < 60) return `${minutes}m ago`;
-
-  const hours = Math.round(minutes / 60);
-  return hours < 24 ? `${hours}h ago` : `${Math.round(hours / 24)}d ago`;
-}
-
-function enrichStory(article: GdeltArticle): MarketStory {
-  const text = article.title.toLowerCase();
-  const category = categoryRules.find(([, pattern]) => pattern.test(text))?.[0] ?? 'Macro';
-  const tickers = tickerRules
-    .filter(([, pattern]) => pattern.test(text))
-    .map(([ticker]) => ticker)
-    .slice(0, 3);
-
-  const highSignals = text.match(
-    /\b(rate (?:hike|cut|decision)|central bank|war|recession|crash|sanction|tariff|default|emergency)\b/g
-  )?.length ?? 0;
-  const mediumSignals = text.match(/\b(inflation|earnings|jobs|gdp|oil|acquisition|regulation)\b/g)?.length ?? 0;
-  const impact: Impact = highSignals > 0 ? 'High' : mediumSignals > 0 ? 'Medium' : 'Low';
-
-  const positiveSignals = text.match(/\b(rally|surge|gain|growth|beat|record high|deal|recovery|cut)\b/g)?.length ?? 0;
-  const negativeSignals = text.match(/\b(fall|drop|loss|crash|recession|war|sanction|layoff|miss|inflation)\b/g)?.length ?? 0;
-  const sentiment: Sentiment =
-    positiveSignals === negativeSignals ? 'Mixed' : positiveSignals > negativeSignals ? 'Positive' : 'Negative';
-
-  const ageHours = Math.max(0, (Date.now() - parseGdeltDate(article.seendate).getTime()) / 3600000);
-  const score = highSignals * 5 + mediumSignals * 2 + tickers.length * 1.5 + Math.max(0, 4 - ageHours / 6);
-
-  return { ...article, category, tickers, impact, sentiment, score };
-}
-
-function readCache(): CacheEntry | null {
-  try {
-    const cached = localStorage.getItem(CACHE_KEY);
-    return cached ? (JSON.parse(cached) as CacheEntry) : null;
-  } catch {
-    return null;
-  }
-}
-
-function loadGdeltFeed(): Promise<GdeltResponse> {
-  if (activeGdeltRequest) return activeGdeltRequest;
-
-  activeGdeltRequest = new Promise((resolve, reject) => {
-    const callbackName = `gdeltMarketPulse_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const script = document.createElement('script');
-    const globalWindow = window as unknown as Record<string, unknown>;
-
-    const cleanup = () => {
-      window.clearTimeout(timeout);
-      script.remove();
-      delete globalWindow[callbackName];
-    };
-
-    const timeout = window.setTimeout(() => {
-      cleanup();
-      reject(new Error('service-error'));
-    }, 15000);
-
-    globalWindow[callbackName] = (data: GdeltResponse) => {
-      cleanup();
-      resolve(data);
-    };
-
-    script.src = `${API_URL}&callback=${callbackName}`;
-    script.async = true;
-    script.onerror = () => {
-      cleanup();
-      reject(new Error('service-error'));
-    };
-    document.head.appendChild(script);
-  });
-
-  void activeGdeltRequest.then(
-    () => { activeGdeltRequest = null; },
-    () => { activeGdeltRequest = null; }
-  );
-
-  return activeGdeltRequest;
+interface PulseSectionProps {
+  id: string;
+  variant: 'market' | 'ai';
+  kicker: string;
+  title: string;
+  description: string;
+  stories: PulseStory[];
+  selectedDate: string;
+  dates: string[];
+  onDateChange: (date: string) => void;
+  formatDateLabel: (date: string) => string;
 }
 
 export function MarketPulse() {
-  const cached = useMemo(readCache, []);
-  const [stories, setStories] = useState<MarketStory[]>(cached?.stories ?? []);
-  const [isLoading, setIsLoading] = useState(!cached?.stories.length);
-  const [error, setError] = useState('');
-  const [lastUpdated, setLastUpdated] = useState<number | null>(cached?.savedAt ?? null);
+  const dates = pulseData.dates;
+  const [marketDate, setMarketDate] = useState<string>(dates[0]);
+  const [aiDate, setAiDate] = useState<string>(dates[0]);
 
-  const loadStories = useCallback(async (force = false) => {
-    const existing = readCache();
+  const marketStories: PulseStory[] = useMemo(() => {
+    const list = (pulseData.marketStoriesByDate as Record<string, PulseStory[]>)[marketDate] || [];
+    return list;
+  }, [marketDate]);
 
-    if (!force && existing && Date.now() - existing.savedAt < CACHE_TTL) {
-      setStories(existing.stories);
-      setLastUpdated(existing.savedAt);
-      setIsLoading(false);
-      return;
-    }
+  const aiStories: PulseStory[] = useMemo(() => {
+    const list = (pulseData.aiStoriesByDate as Record<string, PulseStory[]>)[aiDate] || [];
+    return list;
+  }, [aiDate]);
 
-    setIsLoading(true);
-    setError('');
+  const formatDateLabel = useCallback((dateStr: string) => {
+    const d = new Date(dateStr + 'T00:00:00');
+    const today = new Date();
+    const diffDays = Math.round((today.getTime() - d.getTime()) / (1000 * 3600 * 24));
+    
+    if (diffDays === 0) return `Today (${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })})`;
+    if (diffDays === 1) return `Yesterday (${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })})`;
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }, []);
 
-    try {
-      const data = await loadGdeltFeed();
-      const unique = Array.from(
-        new Map((data.articles ?? []).map((article) => [article.title.trim().toLowerCase(), article])).values()
-      );
-      const nextStories = unique
-        .map(enrichStory)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 7);
+  return (
+    <div className="intelligence-feed" style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+      <PulseSection
+        id="market-pulse-title"
+        variant="market"
+        kicker="Global intelligence"
+        title="Market Pulse"
+        description="Important stories shaping economies, markets, and digital assets."
+        stories={marketStories}
+        selectedDate={marketDate}
+        dates={dates}
+        onDateChange={setMarketDate}
+        formatDateLabel={formatDateLabel}
+      />
+      <PulseSection
+        id="ai-pulse-title"
+        variant="ai"
+        kicker="Frontier intelligence"
+        title="AI Pulse"
+        description="Major model releases, research, funding, chips, policy, and product moves."
+        stories={aiStories}
+        selectedDate={aiDate}
+        dates={dates}
+        onDateChange={setAiDate}
+        formatDateLabel={formatDateLabel}
+      />
+    </div>
+  );
+}
 
-      if (!nextStories.length) throw new Error('No market stories were returned');
-
-      const savedAt = Date.now();
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt, stories: nextStories }));
-      setStories(nextStories);
-      setLastUpdated(savedAt);
-    } catch {
-      setError(
-        stories.length
-          ? 'The public news feed is busy. Showing cached stories until the next refresh.'
-          : 'The public news feed is busy. Please wait a moment and refresh.'
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }, [stories.length]);
-
-  useEffect(() => {
-    void loadStories();
-    const interval = window.setInterval(() => void loadStories(true), REFRESH_INTERVAL);
-    return () => window.clearInterval(interval);
-  }, [loadStories]);
-
+function PulseSection({
+  id,
+  variant,
+  kicker,
+  title,
+  description,
+  stories,
+  selectedDate,
+  dates,
+  onDateChange,
+  formatDateLabel
+}: PulseSectionProps) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const featured = stories[0];
   const secondary = stories.slice(1);
 
+  const currentIndex = dates.indexOf(selectedDate);
+  const hasOlder = currentIndex < dates.length - 1;
+  const hasNewer = currentIndex > 0;
+
+  // Next (Right Arrow / Newer Date): move towards index 0
+  const handleNextDate = () => {
+    if (hasNewer) onDateChange(dates[currentIndex - 1]);
+  };
+
+  // Prev (Left Arrow / Older Date): move towards higher index
+  const handlePrevDate = () => {
+    if (hasOlder) onDateChange(dates[currentIndex + 1]);
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    onDateChange(dates[0]);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  };
+
   return (
-    <section className="market-pulse" aria-labelledby="market-pulse-title">
+    <section className={`market-pulse ${variant === 'ai' ? 'ai-pulse' : ''}`} aria-labelledby={id}>
       <div className="market-pulse-header">
         <div>
-          <span className="section-kicker">Global intelligence</span>
-          <h2 id="market-pulse-title">Market Pulse</h2>
-          <p>Important stories shaping economies, markets, and digital assets.</p>
+          <span className="section-kicker">{kicker}</span>
+          <h2 id={id}>{title}</h2>
+          <p>{description}</p>
         </div>
+
         <div className="market-pulse-actions">
-          {lastUpdated && <span>Updated {relativeTime(new Date(lastUpdated).toISOString())}</span>}
-          <button className="refresh-btn" type="button" onClick={() => void loadStories(true)} disabled={isLoading}>
-            <span className={isLoading ? 'refresh-icon spinning' : 'refresh-icon'} aria-hidden="true">↻</span>
-            {isLoading ? 'Refreshing' : 'Refresh'}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <button
+              type="button"
+              className="pulse-date-btn"
+              onClick={handlePrevDate}
+              disabled={!hasOlder}
+              title="Previous (Older Date)"
+            >
+              <IconChevronLeft size={16} />
+            </button>
+
+            <select
+              id={`${variant}-date-select`}
+              className="pulse-date-select"
+              value={selectedDate}
+              onChange={(e) => onDateChange(e.target.value)}
+            >
+              {dates.map((dateStr) => (
+                <option key={dateStr} value={dateStr}>
+                  {formatDateLabel(dateStr)}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="button"
+              className="pulse-date-btn"
+              onClick={handleNextDate}
+              disabled={!hasNewer}
+              title="Next (Newer Date)"
+            >
+              <IconChevronRight size={16} />
+            </button>
+
+            <button
+              type="button"
+              className={`pulse-date-btn ${isRefreshing ? 'refreshing' : ''}`}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              title="Refresh pulse data"
+              style={{ marginLeft: '0.4rem' }}
+            >
+              <span className={isRefreshing ? 'spinning-icon' : ''} style={{ fontSize: '1rem', display: 'inline-block' }}>↻</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {error && <div className="market-notice">{error}</div>}
-
-      {isLoading && !featured ? (
-        <div className="market-grid" aria-label="Loading market stories">
-          <div className="market-story featured-story story-skeleton" />
-          <div className="secondary-stories">
-            <div className="market-story story-skeleton" />
-            <div className="market-story story-skeleton" />
-          </div>
-        </div>
-      ) : featured ? (
+      {featured ? (
         <div className="market-grid">
           <a className="market-story featured-story" href={featured.url_mobile || featured.url} target="_blank" rel="noreferrer">
             {featured.socialimage && (
@@ -278,17 +210,16 @@ export function MarketPulse() {
             ))}
           </div>
         </div>
-      ) : null}
-
-      <p className="market-disclaimer">
-        News ranking and tone labels are automated from headline signals. For information only—not financial advice.
-        Data provided by <a href="https://www.gdeltproject.org/" target="_blank" rel="noreferrer">GDELT</a>.
-      </p>
+      ) : (
+        <div className="glass-card" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+          No {title.toLowerCase()} stories recorded for {selectedDate}.
+        </div>
+      )}
     </section>
   );
 }
 
-function StoryLabels({ story }: { story: MarketStory }) {
+function StoryLabels({ story }: { story: PulseStory }) {
   return (
     <div className="story-labels">
       <span className={`impact-label impact-${story.impact.toLowerCase()}`}>{story.impact} impact</span>
@@ -298,7 +229,7 @@ function StoryLabels({ story }: { story: MarketStory }) {
   );
 }
 
-function StoryMeta({ story }: { story: MarketStory }) {
+function StoryMeta({ story }: { story: PulseStory }) {
   return (
     <div className="story-meta">
       <span>{story.domain}</span>
@@ -306,4 +237,16 @@ function StoryMeta({ story }: { story: MarketStory }) {
       {story.tickers.map((ticker) => <span className="ticker" key={ticker}>{ticker}</span>)}
     </div>
   );
+}
+
+function relativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = Date.now();
+  const diffMs = now - date.getTime();
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+  if (diffHours < 1) return 'Just now';
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays}d ago`;
 }

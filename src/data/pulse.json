@@ -1,0 +1,205 @@
+{
+  "dates": ["2026-07-29", "2026-07-28", "2026-07-27"],
+  "marketStoriesByDate": {
+    "2026-07-29": [
+      {
+        "url": "https://www.reuters.com/business/finance/global-central-banks-align-on-rate-stabilization-2026-07-29/",
+        "title": "Global Central Banks Align on Monetary Rate Stabilization Strategies",
+        "seendate": "2026-07-29T10:00:00Z",
+        "domain": "reuters.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "Macro",
+        "tickers": ["USD", "EUR", "FED"],
+        "socialimage": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "url": "https://www.bloomberg.com/news/articles/tech-earnings-surge-ai-infrastructure-2026-07-29",
+        "title": "Semiconductor & Tech Capital Expenditure Reaches All-Time High",
+        "seendate": "2026-07-29T08:30:00Z",
+        "domain": "bloomberg.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "Stocks",
+        "tickers": ["NVDA", "AAPL", "MSFT"]
+      },
+      {
+        "url": "https://www.coindesk.com/markets/bitcoin-institutional-inflows-reach-monthly-high-2026-07-29",
+        "title": "Institutional Crypto Funds Record Massive Inflows Amid Digital Asset Expansion",
+        "seendate": "2026-07-29T07:15:00Z",
+        "domain": "coindesk.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Crypto",
+        "tickers": ["BTC", "ETH"]
+      }
+    ],
+    "2026-07-28": [
+      {
+        "url": "https://www.wsj.com/articles/us-inflation-cools-target-band-2026-07-28",
+        "title": "Inflation Index Cools Towards Key Target Band in Q3 Financial Report",
+        "seendate": "2026-07-28T14:20:00Z",
+        "domain": "wsj.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "Macro",
+        "tickers": ["CPI", "SPX"],
+        "socialimage": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "url": "https://www.ft.com/content/energy-markets-crude-oil-stability-2026-07-28",
+        "title": "Global Crude Energy Supply Rebalances Following Shipping Route Updates",
+        "seendate": "2026-07-28T10:00:00Z",
+        "domain": "ft.com",
+        "impact": "Medium",
+        "sentiment": "Mixed",
+        "category": "Energy",
+        "tickers": ["OIL", "GAS"]
+      },
+      {
+        "url": "https://www.reuters.com/technology/cloud-computing-demand-soars-q3-2026-07-28",
+        "title": "Enterprise Cloud Growth Accelerates Enterprise Digital Transformation",
+        "seendate": "2026-07-28T08:30:00Z",
+        "domain": "reuters.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Stocks",
+        "tickers": ["AMZN", "MSFT"]
+      }
+    ],
+    "2026-07-27": [
+      {
+        "url": "https://www.cnbc.com/2026/07/27/global-trade-agreement-framework-signed.html",
+        "title": "International Trade Framework Tariff Adjustments Approved by Commerce Delegations",
+        "seendate": "2026-07-27T16:00:00Z",
+        "domain": "cnbc.com",
+        "impact": "High",
+        "sentiment": "Mixed",
+        "category": "Geopolitics",
+        "tickers": ["TRADE", "GLOBAL"],
+        "socialimage": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "url": "https://www.bloomberg.com/news/articles/renewable-energy-investment-milestone-2026-07-27",
+        "title": "Renewable Power Grid Capacities Exceed Expectations Across North America",
+        "seendate": "2026-07-27T09:10:00Z",
+        "domain": "bloomberg.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Energy",
+        "tickers": ["TSLA", "GRID"]
+      },
+      {
+        "url": "https://www.wsj.com/articles/global-bond-yields-stabilize-q3-2026-07-27",
+        "title": "Global Sovereign Bond Yields Stabilize Following Policy Clarifications",
+        "seendate": "2026-07-27T07:30:00Z",
+        "domain": "wsj.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Macro",
+        "tickers": ["BONDS", "USD"]
+      }
+    ]
+  },
+  "aiStoriesByDate": {
+    "2026-07-29": [
+      {
+        "url": "https://techcrunch.com/2026/07/29/next-gen-frontier-ai-models-reasoning-breakthrough/",
+        "title": "Frontier AI Models Achieve Unprecedented Autonomous Reasoning Benchmarks",
+        "seendate": "2026-07-29T11:00:00Z",
+        "domain": "techcrunch.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "Models",
+        "tickers": ["OPENAI", "DEEPMIND"],
+        "socialimage": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "url": "https://www.wired.com/story/custom-silicon-accelerators-ai-cluster-scaling/",
+        "title": "Custom Silicon Accelerators Double AI Cluster Compute Efficiency",
+        "seendate": "2026-07-29T09:40:00Z",
+        "domain": "wired.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "Chips",
+        "tickers": ["NVDA", "GOOGL"]
+      },
+      {
+        "url": "https://www.reuters.com/technology/global-ai-governance-framework-standards-2026-07-29",
+        "title": "International Coalition Agrees on Standardized AI Governance Guidelines",
+        "seendate": "2026-07-29T07:50:00Z",
+        "domain": "reuters.com",
+        "impact": "Medium",
+        "sentiment": "Mixed",
+        "category": "Policy",
+        "tickers": ["AI", "GOV"]
+      }
+    ],
+    "2026-07-28": [
+      {
+        "url": "https://venturebeat.com/ai/multimodal-agent-frameworks-enterprise-workflows-2026-07-28",
+        "title": "Multimodal Agent Frameworks Transform Autonomous Enterprise Workflows",
+        "seendate": "2026-07-28T15:10:00Z",
+        "domain": "venturebeat.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "Research",
+        "tickers": ["MSFT", "ANTHROPIC"],
+        "socialimage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "url": "https://techcrunch.com/2026/07/28/ai-developer-tools-ecosystem-growth/",
+        "title": "Open-Source AI Developer Ecosystem Sees Exponential Adoption Surge",
+        "seendate": "2026-07-28T11:20:00Z",
+        "domain": "techcrunch.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Products",
+        "tickers": ["GIT", "AI"]
+      },
+      {
+        "url": "https://www.wired.com/story/ai-data-center-power-grid-innovations-2026-07-28",
+        "title": "Data Center Power Innovations Accelerate Next-Gen Model Deployments",
+        "seendate": "2026-07-28T09:00:00Z",
+        "domain": "wired.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Chips",
+        "tickers": ["NVDA", "AMZN"]
+      }
+    ],
+    "2026-07-27": [
+      {
+        "url": "https://www.theverge.com/2026/7/27/ai-funding-rounds-reach-record-q3",
+        "title": "Venture Capital Inflows into Frontier AI Startups Reach New Peak",
+        "seendate": "2026-07-27T14:00:00Z",
+        "domain": "theverge.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "Funding",
+        "tickers": ["VC", "AI"],
+        "socialimage": "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "url": "https://www.reuters.com/technology/ai-benchmark-testing-standardization-2026-07-27",
+        "title": "Independent Research Labs Establish Standardized Benchmark Suite",
+        "seendate": "2026-07-27T11:30:00Z",
+        "domain": "reuters.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Research",
+        "tickers": ["BENCHMARK", "AI"]
+      },
+      {
+        "url": "https://venturebeat.com/ai/synthetic-data-generation-breakthroughs-2026-07-27",
+        "title": "Synthetic Data Generation Reduces Model Pre-Training Data Bottlenecks",
+        "seendate": "2026-07-27T08:45:00Z",
+        "domain": "venturebeat.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Models",
+        "tickers": ["DATA", "AI"]
+      }
+    ]
+  }
+}

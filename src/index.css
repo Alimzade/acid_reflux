@@ -826,3 +826,49 @@ body {
     display: flex;
   }
 }
+
+.pulse-date-btn {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pulse-date-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pulse-date-btn:not(:disabled):hover {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: var(--accent-cyan);
+}
+
+.pulse-date-select {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+@keyframes spinIcon {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinning-icon {
+  animation: spinIcon 0.6s linear infinite;
+}
