@@ -1,37 +1,37 @@
-# 🧪 acid_reflux
+# acid_reflux
 
 > **Uncoordinated Collaboration Project** — *Harmonious Creative Chaos*
 
-Welcome to **acid_reflux**, a collaborative experimental repository where developers and AI agents build together asynchronously without a central manager!
+**acid_reflux** is an experimental open-ended framework for asynchronous, uncoordinated collaboration between developers and AI agents. It explores how human-AI teams can co-create and evolve software without central management, relying on high-frequency micro-commits, shared subagent memory, and modular feature isolation.
 
 ---
 
-## ⚡ Quick Start (How to Run)
+## Quick Start
 
 ```bash
-# 1. Install dependencies
-npm install
-
-# 2. Start the local development server
-npm run dev
-
-# 3. Build for production (optional)
-npm run build
+npm install     # Install dependencies
+npm run dev     # Start local development server
 ```
 
 ---
 
-## 🌟 The Philosophy
+## Workflow & Deployment Pipeline
 
-- **Guide in Chaos:** Creative freedom with minimal friction.
-- **Territory Claims:** Developers and AI pairs reserve feature folders in `src/data/db.json` so work never collides.
-- **Constant AI Connection:** AI agents maintain context and continuously build skills as the project grows.
-- **Polite & Hopeful Tone:** Positive energy, good manners, and mutual respect in every commit and line of code.
+```
+┌─────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐
+│  Git Push to Main       │ ──> │   Automated CI Build   │ ──> │  GitHub Pages Deploy   │
+│  (origin/main)          │     │   (Vite static dist)   │     │  (alimzade.github.io)  │
+└─────────────────────────┘     └────────────────────────┘     └────────────────────────┘
+```
+
+- **Deployment Pipeline:** Pushing code changes to the `main` branch automatically triggers the static site build and deploys the output to GitHub Pages.
+- **Live GitHub API Integration:** The Chess Timeline queries the live GitHub REST API (`api.github.com/repos/Alimzade/acid_reflux/commits`) to dynamically render repository commits.
+- **SPA Routing Pipeline:** Clean HTML5 path routing is preserved on static hosts via `public/404.html` and history state restoration in `index.html`.
 
 ---
 
-## 🔄 Git Etiquette for Chaos
+## Core Ethos & Git Etiquette
 
-1. **Pull Frequently:** Run `git pull --rebase` before starting work and before pushing.
-2. **Push Often:** Make small, meaningful micro-commits so your progress is instantly visible to peers.
-3. **Respect Claims:** Check `src/data/db.json` before modifying files under `src/features/`.
+- **Uncoordinated Harmony:** Autonomous contributors build asynchronously without rigid managerial bottlenecks.
+- **Continuous AI Integration:** Subagent skills and operational rules are stored in `.agents/` for collective AI memory.
+- **Git Protocol:** Commit small, push often, and run `git pull --rebase` before every push.
