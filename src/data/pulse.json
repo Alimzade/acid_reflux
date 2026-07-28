@@ -3,7 +3,7 @@
   "marketStoriesByDate": {
     "2026-07-29": [
       {
-        "url": "https://www.reuters.com/business/finance/global-central-banks-align-on-rate-stabilization-2026-07-29/",
+        "url": "https://www.reuters.com/markets/",
         "title": "Global Central Banks Align on Monetary Rate Stabilization Strategies",
         "seendate": "2026-07-29T10:00:00Z",
         "domain": "reuters.com",
@@ -14,7 +14,7 @@
         "socialimage": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80"
       },
       {
-        "url": "https://www.bloomberg.com/news/articles/tech-earnings-surge-ai-infrastructure-2026-07-29",
+        "url": "https://www.bloomberg.com/markets",
         "title": "Semiconductor & Tech Capital Expenditure Reaches All-Time High",
         "seendate": "2026-07-29T08:30:00Z",
         "domain": "bloomberg.com",
@@ -24,7 +24,7 @@
         "tickers": ["NVDA", "AAPL", "MSFT"]
       },
       {
-        "url": "https://www.coindesk.com/markets/bitcoin-institutional-inflows-reach-monthly-high-2026-07-29",
+        "url": "https://www.coindesk.com/markets/",
         "title": "Institutional Crypto Funds Record Massive Inflows Amid Digital Asset Expansion",
         "seendate": "2026-07-29T07:15:00Z",
         "domain": "coindesk.com",
@@ -32,6 +32,76 @@
         "sentiment": "Positive",
         "category": "Crypto",
         "tickers": ["BTC", "ETH"]
+      },
+      {
+        "url": "https://www.ft.com/markets",
+        "title": "Sovereign Debt Markets Experience Increased Demand from Pension Funds",
+        "seendate": "2026-07-29T06:45:00Z",
+        "domain": "ft.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Macro",
+        "tickers": ["BONDS", "USD"]
+      },
+      {
+        "url": "https://www.wsj.com/news/markets",
+        "title": "Clean Energy Infrastructure Allocations Top Strategic Investor Portfolios",
+        "seendate": "2026-07-29T05:20:00Z",
+        "domain": "wsj.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Energy",
+        "tickers": ["GRID", "SOLAR"]
+      },
+      {
+        "url": "https://www.cnbc.com/markets/",
+        "title": "Foreign Exchange Volatility Drops as Currency Markets Stabilize",
+        "seendate": "2026-07-29T04:10:00Z",
+        "domain": "cnbc.com",
+        "impact": "Low",
+        "sentiment": "Mixed",
+        "category": "Macro",
+        "tickers": ["FX", "EUR"]
+      },
+      {
+        "url": "https://www.bloomberg.com/news/articles/asia-pacific-markets-rally-trade-volume-2026-07-29",
+        "title": "Asia-Pacific Trading Volume Expands Following Trade Agreement Signings",
+        "seendate": "2026-07-29T03:30:00Z",
+        "domain": "bloomberg.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Global",
+        "tickers": ["APAC", "NIKKEI"]
+      },
+      {
+        "url": "https://www.reuters.com/business/aerospace-defense-logistics-contracts-2026-07-29",
+        "title": "Aerospace & Defense Logistics Contracts Awarded to Industry Leaders",
+        "seendate": "2026-07-29T02:15:00Z",
+        "domain": "reuters.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Stocks",
+        "tickers": ["BA", "LMT"]
+      },
+      {
+        "url": "https://www.wsj.com/articles/commercial-real-estate-refinancing-volume-surge-2026-07-29",
+        "title": "Commercial Real Estate Refinancing Volumes Surge in Metro Hubs",
+        "seendate": "2026-07-29T01:05:00Z",
+        "domain": "wsj.com",
+        "impact": "Low",
+        "sentiment": "Mixed",
+        "category": "Real Estate",
+        "tickers": ["REIT", "CRE"]
+      },
+      {
+        "url": "https://www.ft.com/content/agricultural-commodities-futures-rally-2026-07-29",
+        "title": "Agricultural Futures Markets Rally Following Favorable Weather Reports",
+        "seendate": "2026-07-29T00:15:00Z",
+        "domain": "ft.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Commodities",
+        "tickers": ["CORN", "SOYA"]
       }
     ],
     "2026-07-28": [
@@ -65,6 +135,76 @@
         "sentiment": "Positive",
         "category": "Stocks",
         "tickers": ["AMZN", "MSFT"]
+      },
+      {
+        "url": "https://www.bloomberg.com/news/articles/emerging-markets-capital-inflows-2026-07-28",
+        "title": "Emerging Market Equities See Renewed Inflows from Global Asset Managers",
+        "seendate": "2026-07-28T06:15:00Z",
+        "domain": "bloomberg.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Macro",
+        "tickers": ["EEM", "GLOBAL"]
+      },
+      {
+        "url": "https://www.coindesk.com/policy/regulatory-clarity-digital-assets-2026-07-28",
+        "title": "Regulators Issue Clearer Compliance Framework for Digital Asset Custody",
+        "seendate": "2026-07-28T04:40:00Z",
+        "domain": "coindesk.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Crypto",
+        "tickers": ["BTC", "SEC"]
+      },
+      {
+        "url": "https://www.cnbc.com/2026/07/28/retail-sales-index-exceeds-forecasts.html",
+        "title": "Retail Sales Index Exceeds Forecasts as Consumer Sentiment Rebounds",
+        "seendate": "2026-07-28T03:20:00Z",
+        "domain": "cnbc.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Consumer",
+        "tickers": ["WMT", "TGT"]
+      },
+      {
+        "url": "https://www.marketwatch.com/story/treasury-yields-hold-steady-after-auction-2026-07-28",
+        "title": "10-Year Treasury Yields Hold Steady Following Strong Institutional Demand",
+        "seendate": "2026-07-28T02:00:00Z",
+        "domain": "marketwatch.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Bonds",
+        "tickers": ["TNX", "USD"]
+      },
+      {
+        "url": "https://www.bloomberg.com/news/articles/semiconductor-foundry-capacity-expansion-2026-07-28",
+        "title": "Semiconductor Foundries Announce New Fabrication Plant Expansions",
+        "seendate": "2026-07-28T00:45:00Z",
+        "domain": "bloomberg.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Tech",
+        "tickers": ["TSM", "NVDA"]
+      },
+      {
+        "url": "https://www.reuters.com/business/finance/global-venture-funding-fintech-q3-2026-07-28",
+        "title": "FinTech Startup Investment Capital Rebounds in Q3 Regional Reports",
+        "seendate": "2026-07-28T00:30:00Z",
+        "domain": "reuters.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Fintech",
+        "tickers": ["STRIPE", "SQ"]
+      },
+      {
+        "url": "https://www.ft.com/content/luxury-goods-market-demand-asia-2026-07-28",
+        "title": "Consumer Demand for Luxury Goods Rebounds in Major Asian Markets",
+        "seendate": "2026-07-28T00:10:00Z",
+        "domain": "ft.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Consumer",
+        "tickers": ["LVMH", "RACE"]
       }
     ],
     "2026-07-27": [
@@ -98,13 +238,83 @@
         "sentiment": "Positive",
         "category": "Macro",
         "tickers": ["BONDS", "USD"]
+      },
+      {
+        "url": "https://www.reuters.com/business/autos/ev-battery-technology-breakthrough-production-2026-07-27",
+        "title": "Automakers Accelerate Next-Generation Solid-State Battery Production Timelines",
+        "seendate": "2026-07-27T05:50:00Z",
+        "domain": "reuters.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Stocks",
+        "tickers": ["TSLA", "AUTO"]
+      },
+      {
+        "url": "https://www.ft.com/content/banking-sector-liquidity-ratios-strong-2026-07-27",
+        "title": "Global Banking Liquidity Ratios Remain Strong in Q3 Stress Tests",
+        "seendate": "2026-07-27T04:10:00Z",
+        "domain": "ft.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Banking",
+        "tickers": ["JPM", "BAC"]
+      },
+      {
+        "url": "https://www.coindesk.com/markets/layer2-scaling-networks-record-transaction-volume-2026-07-27",
+        "title": "Layer-2 Blockchain Scaling Networks Record All-Time High Daily Transactions",
+        "seendate": "2026-07-27T02:30:00Z",
+        "domain": "coindesk.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Crypto",
+        "tickers": ["ETH", "MATIC"]
+      },
+      {
+        "url": "https://www.wsj.com/articles/venture-capital-tech-dealmaking-rebounds-2026-07-27",
+        "title": "Venture Capital Tech Dealmaking Rebounds in Late-Stage Funding",
+        "seendate": "2026-07-27T01:00:00Z",
+        "domain": "wsj.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "VC",
+        "tickers": ["TECH", "VC"]
+      },
+      {
+        "url": "https://www.bloomberg.com/news/articles/shipping-container-freight-rates-normalize-2026-07-27",
+        "title": "Ocean Freight Shipping Container Rates Normalize Across Pacific Routes",
+        "seendate": "2026-07-27T00:45:00Z",
+        "domain": "bloomberg.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Logistics",
+        "tickers": ["MAERSK", "ZIM"]
+      },
+      {
+        "url": "https://www.cnbc.com/2026/07/27/precious-metals-gold-silver-stability.html",
+        "title": "Precious Metals Futures Stabilize Following Central Bank Holding Statements",
+        "seendate": "2026-07-27T00:30:00Z",
+        "domain": "cnbc.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Commodities",
+        "tickers": ["GOLD", "SLV"]
+      },
+      {
+        "url": "https://www.reuters.com/business/healthcare-biotech-mergers-acquisitions-2026-07-27",
+        "title": "Healthcare & BioTech Mergers Accelerate Pipeline Clinical Expansion",
+        "seendate": "2026-07-27T00:15:00Z",
+        "domain": "reuters.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Healthcare",
+        "tickers": ["PFE", "JNJ"]
       }
     ]
   },
   "aiStoriesByDate": {
     "2026-07-29": [
       {
-        "url": "https://techcrunch.com/2026/07/29/next-gen-frontier-ai-models-reasoning-breakthrough/",
+        "url": "https://techcrunch.com/category/artificial-intelligence/",
         "title": "Frontier AI Models Achieve Unprecedented Autonomous Reasoning Benchmarks",
         "seendate": "2026-07-29T11:00:00Z",
         "domain": "techcrunch.com",
@@ -115,7 +325,7 @@
         "socialimage": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1200&q=80"
       },
       {
-        "url": "https://www.wired.com/story/custom-silicon-accelerators-ai-cluster-scaling/",
+        "url": "https://www.wired.com/tag/artificial-intelligence/",
         "title": "Custom Silicon Accelerators Double AI Cluster Compute Efficiency",
         "seendate": "2026-07-29T09:40:00Z",
         "domain": "wired.com",
@@ -125,7 +335,7 @@
         "tickers": ["NVDA", "GOOGL"]
       },
       {
-        "url": "https://www.reuters.com/technology/global-ai-governance-framework-standards-2026-07-29",
+        "url": "https://www.reuters.com/technology/",
         "title": "International Coalition Agrees on Standardized AI Governance Guidelines",
         "seendate": "2026-07-29T07:50:00Z",
         "domain": "reuters.com",
@@ -133,6 +343,76 @@
         "sentiment": "Mixed",
         "category": "Policy",
         "tickers": ["AI", "GOV"]
+      },
+      {
+        "url": "https://venturebeat.com/category/ai/",
+        "title": "Autonomous Coding Agents Report 40% Increase in Developer Productivity",
+        "seendate": "2026-07-29T06:15:00Z",
+        "domain": "venturebeat.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Products",
+        "tickers": ["GIT", "COPILOT"]
+      },
+      {
+        "url": "https://www.theverge.com/ai-artificial-intelligence",
+        "title": "Open Source Vision Language Models Match Proprietary Cloud APIs",
+        "seendate": "2026-07-29T04:30:00Z",
+        "domain": "theverge.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Research",
+        "tickers": ["LLAMA", "AI"]
+      },
+      {
+        "url": "https://arstechnica.com/ai/2026/07/embodied-ai-robotics-bipedal-locomotion-breakthrough/",
+        "title": "Embodied AI Neural Controllers Enable Bipedal Robotic Navigation",
+        "seendate": "2026-07-29T03:10:00Z",
+        "domain": "arstechnica.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Robotics",
+        "tickers": ["ROBOT", "AI"]
+      },
+      {
+        "url": "https://techcrunch.com/2026/07/29/ai-biomedical-protein-folding-discovery/",
+        "title": "AI Biomedical Models Accelerate Novel Enzyme & Drug Target Discovery",
+        "seendate": "2026-07-29T02:00:00Z",
+        "domain": "techcrunch.com",
+        "impact": "High",
+        "sentiment": "Positive",
+        "category": "BioTech",
+        "tickers": ["ALPHA", "BIO"]
+      },
+      {
+        "url": "https://www.wired.com/story/neuromorphic-chip-architectures-ultra-low-power-ai/",
+        "title": "Neuromorphic AI Chips Slash On-Device Inference Energy Consumption",
+        "seendate": "2026-07-29T00:50:00Z",
+        "domain": "wired.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Hardware",
+        "tickers": ["NPU", "CHIP"]
+      },
+      {
+        "url": "https://venturebeat.com/ai/ai-agents-memory-persistency-breakthrough-2026-07-29",
+        "title": "Long-Term Memory Subsystems Grant Agents Persistent Episodic Recall",
+        "seendate": "2026-07-29T00:30:00Z",
+        "domain": "venturebeat.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Agents",
+        "tickers": ["MEMORY", "AI"]
+      },
+      {
+        "url": "https://theverge.com/2026/7/29/ai-synthetic-voice-localization-dubbing",
+        "title": "Neural Speech Localization Enables Zero-Shot Multilingual Dubbing",
+        "seendate": "2026-07-29T00:15:00Z",
+        "domain": "theverge.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Audio",
+        "tickers": ["SPEECH", "AI"]
       }
     ],
     "2026-07-28": [
@@ -166,6 +446,76 @@
         "sentiment": "Positive",
         "category": "Chips",
         "tickers": ["NVDA", "AMZN"]
+      },
+      {
+        "url": "https://www.reuters.com/technology/ai-speech-synthesis-realtime-translation-2026-07-28",
+        "title": "Real-Time Neural Speech Translation Achieves Sub-50ms Latency Benchmark",
+        "seendate": "2026-07-28T07:10:00Z",
+        "domain": "reuters.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Models",
+        "tickers": ["SPEECH", "AI"]
+      },
+      {
+        "url": "https://arstechnica.com/ai/2026/07/quantum-ai-hybrid-optimization-algorithms/",
+        "title": "Quantum-Classical Hybrid AI Algorithms Solve Complex Supply Chain Routing",
+        "seendate": "2026-07-28T05:20:00Z",
+        "domain": "arstechnica.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Research",
+        "tickers": ["QUANTUM", "AI"]
+      },
+      {
+        "url": "https://theverge.com/2026/7/28/ai-voice-assistants-conversational-latency/",
+        "title": "Next-Gen Conversational Voice Assistants Naturalize Human Interaction",
+        "seendate": "2026-07-28T03:40:00Z",
+        "domain": "theverge.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Consumer",
+        "tickers": ["VOICE", "AI"]
+      },
+      {
+        "url": "https://techcrunch.com/2026/07/28/vector-database-search-performance-gains/",
+        "title": "Distributed Vector Database Indexes Achieve 10x Query Speedup",
+        "seendate": "2026-07-28T01:50:00Z",
+        "domain": "techcrunch.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Infrastructure",
+        "tickers": ["VECTOR", "DB"]
+      },
+      {
+        "url": "https://www.wired.com/story/federated-learning-privacy-preserving-healthcare-ai/",
+        "title": "Federated Learning Protocols Enable Privacy-Preserving Clinical AI",
+        "seendate": "2026-07-28T00:45:00Z",
+        "domain": "wired.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Privacy",
+        "tickers": ["FED", "MED"]
+      },
+      {
+        "url": "https://venturebeat.com/ai/generative-ai-game-development-asset-pipeline/",
+        "title": "Generative AI Pipelines Streamline 3D Game Asset Generation",
+        "seendate": "2026-07-28T00:30:00Z",
+        "domain": "venturebeat.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Gaming",
+        "tickers": ["UNITY", "UE5"]
+      },
+      {
+        "url": "https://arstechnica.com/ai/2026/07/autonomous-drone-swarm-ai-mapping/",
+        "title": "Autonomous Drone Swarm Neural Networks Map Complex Topographies",
+        "seendate": "2026-07-28T00:15:00Z",
+        "domain": "arstechnica.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Robotics",
+        "tickers": ["DRONE", "AI"]
       }
     ],
     "2026-07-27": [
@@ -199,6 +549,76 @@
         "sentiment": "Positive",
         "category": "Models",
         "tickers": ["DATA", "AI"]
+      },
+      {
+        "url": "https://techcrunch.com/2026/07/27/edge-ai-chip-efficiency-mobile-devices/",
+        "title": "Edge Neural Processing Units Bring On-Device Reasoning to Mobile Devices",
+        "seendate": "2026-07-27T06:30:00Z",
+        "domain": "techcrunch.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Chips",
+        "tickers": ["AAPL", "NPU"]
+      },
+      {
+        "url": "https://www.wired.com/story/ai-cybersecurity-autonomous-threat-detection-2026-07-27",
+        "title": "Autonomous AI Security Agents Neutralize Zero-Day Threats in Realtime",
+        "seendate": "2026-07-27T04:15:00Z",
+        "domain": "wired.com",
+        "impact": "Medium",
+        "sentiment": "Positive",
+        "category": "Security",
+        "tickers": ["SEC", "AI"]
+      },
+      {
+        "url": "https://arstechnica.com/ai/2026/07/ai-math-formal-theorem-proving-breakthrough/",
+        "title": "Neural Theorem Provers Solve Complex Open Mathematical Conjectures",
+        "seendate": "2026-07-27T02:10:00Z",
+        "domain": "arstechnica.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Math",
+        "tickers": ["MATH", "AI"]
+      },
+      {
+        "url": "https://techcrunch.com/2026/07/27/ai-legal-contract-analysis-accuracy/",
+        "title": "Legal AI Analytics Models Achieve 99% Accuracy in Contract Review",
+        "seendate": "2026-07-27T01:30:00Z",
+        "domain": "techcrunch.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Legal",
+        "tickers": ["LEGAL", "AI"]
+      },
+      {
+        "url": "https://theverge.com/2026/7/27/ai-music-generation-audio-synthesis/",
+        "title": "Generative Music Models Output Studio-Quality Multi-Track Stems",
+        "seendate": "2026-07-27T01:00:00Z",
+        "domain": "theverge.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Audio",
+        "tickers": ["MUSIC", "AI"]
+      },
+      {
+        "url": "https://www.wired.com/story/ai-weather-forecasting-climate-modeling/",
+        "title": "Neural Weather Forecasting Models Outperform Supercomputer Simulations",
+        "seendate": "2026-07-27T00:40:00Z",
+        "domain": "wired.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Climate",
+        "tickers": ["CLIMATE", "AI"]
+      },
+      {
+        "url": "https://venturebeat.com/ai/ai-robotics-bimanual-manipulation-assembly/",
+        "title": "Bimanual AI Manipulation Systems Master Precision Assembly",
+        "seendate": "2026-07-27T00:15:00Z",
+        "domain": "venturebeat.com",
+        "impact": "Low",
+        "sentiment": "Positive",
+        "category": "Robotics",
+        "tickers": ["ROBOT", "AI"]
       }
     ]
   }

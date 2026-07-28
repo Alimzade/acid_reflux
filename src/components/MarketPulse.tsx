@@ -220,7 +220,12 @@ function PulseSection({
 
       {featured ? (
         <div className="market-grid">
-          <a className="market-story featured-story" href={featured.url_mobile || featured.url} target="_blank" rel="noreferrer">
+          <a
+            className="market-story featured-story"
+            href={featured.url_mobile || featured.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {featured.socialimage && (
               <div className="featured-image" style={{ backgroundImage: `url("${featured.socialimage}")` }} />
             )}
@@ -237,7 +242,13 @@ function PulseSection({
 
           <div className="secondary-stories">
             {secondary.map((story) => (
-              <a className="market-story compact-story" href={story.url_mobile || story.url} target="_blank" rel="noreferrer" key={story.url}>
+              <a
+                className="market-story compact-story"
+                href={story.url_mobile || story.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={story.url}
+              >
                 <StoryLabels story={story} language={language} />
                 <h3>{language === 'de' ? GERMAN_TITLES[story.title] ?? story.title : story.title}</h3>
                 <StoryMeta story={story} language={language} />
