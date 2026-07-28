@@ -15,5 +15,52 @@
       "status": "active",
       "timestamp": "2026-07-28"
     }
+  ],
+  "moves": [
+    {
+      "id": "move-1",
+      "moveNumber": 1,
+      "player": "Anar & AI Pair",
+      "aiAgent": "Antigravity",
+      "piece": "♔ e4",
+      "hash": "fcfd6c4",
+      "date": "2026-07-28",
+      "title": "Opening Move: Project Specs & Ethos Setup",
+      "details": [
+        "Add design spec for Guide in Chaos dashboard",
+        "Create .agents/ETHOS.md for AI collaboration guidelines",
+        "Initialize src/data/registry.json territory claims"
+      ]
+    },
+    {
+      "id": "move-2",
+      "moveNumber": 2,
+      "player": "Collaborator & AI Pair",
+      "aiAgent": "Antigravity",
+      "piece": "♞ Nf3",
+      "hash": "9b12a88",
+      "date": "2026-07-28",
+      "title": "Vite+React Dashboard Scaffold & DB Integration",
+      "details": [
+        "Scaffold Vite React TypeScript architecture",
+        "Implement src/data/db.json version-controlled database",
+        "Build Territory Manager & Concept Docs UI"
+      ]
+    },
+    {
+      "id": "move-3",
+      "moveNumber": 3,
+      "player": "Anar & AI Pair",
+      "aiAgent": "Antigravity",
+      "piece": "♗ Bc4",
+      "hash": "7a41d9c",
+      "date": "2026-07-29",
+      "title": "Unified Digital Clock & Tech Color Cycling",
+      "details": [
+        "Add timezone tooltip and connected clock widget",
+        "Add click-to-cycle 6 tech color palette (Cyber White, Electric Blue, Matrix Green...)",
+        "Configure GitHub Actions CI/CD deployment"
+      ]
+    }
   ]
 }

@@ -1,38 +1,39 @@
 import { useState } from 'react';
+import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { MarketPulse } from './features/market-pulse/MarketPulse';
+import { ChessTimeline } from './features/chess-timeline/ChessTimeline';
 import { ConceptDocs } from './components/ConceptDocs';
-import { TerritoryManager } from './components/TerritoryManager';
-import { MarketPulse } from './components/MarketPulse';
 import dbData from './data/db.json';
-import { Claim, Database } from './types';
+import { Database, PageView } from './types';
 
 export function App() {
-  const [db, setDb] = useState<Database>(dbData as Database);
-  const [activeTab, setActiveTab] = useState<'concept' | 'territory'>('concept');
-
-  const handleAddClaim = (newClaim: Claim) => {
-    setDb((prev) => ({
-      ...prev,
-      claims: [...prev.claims, newClaim]
-    }));
-  };
+  const [db] = useState<Database>(dbData as Database);
+  const [activePage, setActivePage] = useState<PageView>('pulse');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
 
   return (
-    <div className="container">
-      <Header
-        info={db.projectInfo}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
+    <div className={`app-layout ${sidebarCollapsed ? 'sidebar-is-collapsed' : ''}`}>
+      <Sidebar
+        activePage={activePage}
+        setActivePage={setActivePage}
+        collapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
       />
 
-      <main>
-        {activeTab === 'concept' ? (
-          <ConceptDocs />
-        ) : (
-          <TerritoryManager claims={db.claims} onAddClaim={handleAddClaim} />
-        )}
-        <MarketPulse />
-      </main>
+      <div className="main-content-wrapper">
+        <Header
+          info={db.projectInfo}
+          sidebarCollapsed={sidebarCollapsed}
+          setSidebarCollapsed={setSidebarCollapsed}
+        />
+
+        <main className="page-content">
+          {activePage === 'pulse' && <MarketPulse />}
+          {activePage === 'chess' && <ChessTimeline />}
+          {activePage === 'docs' && <ConceptDocs />}
+        </main>
+      </div>
     </div>
   );
 }

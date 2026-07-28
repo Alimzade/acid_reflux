@@ -15,7 +15,22 @@ export interface ProjectInfo {
   ethos: string;
 }
 
+export interface ChessMove {
+  id: string;
+  moveNumber: number;
+  player: string;
+  aiAgent?: string;
+  piece: string;
+  hash: string;
+  date: string;
+  title: string;
+  details: string[];
+}
+
 export interface Database {
   projectInfo: ProjectInfo;
   claims: Claim[];
+  moves: ChessMove[];
 }
+
+export type PageView = 'pulse' | 'chess' | 'docs';
