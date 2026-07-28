@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Header } from './components/Header';
 import { ConceptDocs } from './components/ConceptDocs';
 import { TerritoryManager } from './components/TerritoryManager';
+import { MarketPulse } from './components/MarketPulse';
 import dbData from './data/db.json';
 import { Claim, Database } from './types';
 
@@ -30,6 +31,7 @@ export function App() {
         ) : (
           <TerritoryManager claims={db.claims} onAddClaim={handleAddClaim} />
         )}
+        <MarketPulse />
       </main>
     </div>
   );
