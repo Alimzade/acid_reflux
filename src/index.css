@@ -17,6 +17,13 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  caret-color: transparent;
+  user-select: none;
+}
+
+input, textarea {
+  caret-color: auto;
+  user-select: auto;
 }
 
 body {
@@ -74,11 +81,10 @@ body {
   gap: 1rem;
 }
 
-.digital-clock {
+/* Connected Unified Clock Styling */
+.digital-clock-unified {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.65rem 0.9rem;
   background: linear-gradient(145deg, rgba(0, 0, 0, 0.96), rgba(10, 13, 22, 0.94));
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 12px;
@@ -86,6 +92,22 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 8px 24px rgba(0, 0, 0, 0.28),
     0 0 18px rgba(99, 102, 241, 0.08);
+  overflow: visible;
+  position: relative;
+}
+
+.digital-clock-main {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.digital-clock-main:hover {
+  opacity: 0.9;
 }
 
 .digital-clock-label {
@@ -97,14 +119,92 @@ body {
 }
 
 .digital-clock-time {
-  color: #fff;
   font-family: var(--font-code);
   font-size: 1.15rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: 0.08em;
-  text-shadow: 0 0 12px rgba(255, 255, 255, 0.32);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.clock-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.clock-tz-trigger-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.clock-tz-square-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 0.65rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.clock-tz-square-btn:hover, .clock-tz-square-btn:focus {
+  background: rgba(168, 85, 247, 0.25);
+  color: #fff;
+}
+
+.clock-tooltip {
+  position: absolute;
+  top: 130%;
+  right: 0;
+  min-width: 210px;
+  padding: 0.8rem 1rem;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-hover);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 100;
+  font-size: 0.8rem;
+}
+
+.clock-tz-trigger-wrapper:hover .clock-tooltip,
+.clock-tz-trigger-wrapper:focus-within .clock-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.tooltip-row:last-child {
+  margin-bottom: 0;
+}
+
+.tooltip-label {
+  color: var(--text-secondary);
+}
+
+.tooltip-value {
+  color: var(--accent-cyan);
+  font-family: var(--font-code);
+  font-weight: 600;
 }
 
 .brand-title {
@@ -221,7 +321,7 @@ code, .code-block {
     align-items: stretch;
   }
 
-  .digital-clock {
+  .digital-clock-unified {
     align-self: flex-end;
   }
 }
@@ -236,7 +336,7 @@ code, .code-block {
     flex-direction: column;
   }
 
-  .digital-clock {
+  .digital-clock-unified {
     align-self: stretch;
     justify-content: space-between;
   }
