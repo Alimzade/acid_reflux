@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IconChess } from '../../components/Icons';
+import { Language } from '../../types';
 
 interface GitHubCommit {
   sha: string;
@@ -19,10 +20,12 @@ interface GitHubCommit {
 
 const CHESS_PIECES = ['♔ e4', '♞ Nf3', '♗ Bc4', '♟ d4', '♞ Nc3', '♜ Re1', '♛ Qe2', '♝ Bg5'];
 
-export const ChessTimeline: React.FC = () => {
+export const ChessTimeline: React.FC<{ language: Language }> = ({ language }) => {
   const [commits, setCommits] = useState<GitHubCommit[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const isGerman = language === 'de';
+  const locale = isGerman ? 'de-DE' : 'en-US';
 
   useEffect(() => {
     async function fetchCommits() {
@@ -51,18 +54,22 @@ export const ChessTimeline: React.FC = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <IconChess size={24} color="var(--accent-purple)" />
-            <h2>Chess Match Commit Log</h2>
+            <h2>{isGerman ? 'Commit-Protokoll der Schachpartie' : 'Chess Match Commit Log'}</h2>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.2rem' }}>
-            Live GitHub commit history styled as tactical chess moves
+            {isGerman
+              ? 'Live-GitHub-Commit-Verlauf im Stil taktischer Schachzüge'
+              : 'Live GitHub commit history styled as tactical chess moves'}
           </p>
         </div>
-        <span className="badge badge-active">{commits.length} Moves Recorded</span>
+        <span className="badge badge-active">
+          {isGerman ? `${commits.length} Züge erfasst` : `${commits.length} Moves Recorded`}
+        </span>
       </div>
 
       {loading ? (
         <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-          Fetching live commit history from GitHub...
+          {isGerman ? 'Live-Commit-Verlauf wird von GitHub geladen...' : 'Fetching live commit history from GitHub...'}
         </div>
       ) : error ? (
         <div className="market-notice">
@@ -74,7 +81,7 @@ export const ChessTimeline: React.FC = () => {
             const isWhite = index % 2 === 0;
             const piece = CHESS_PIECES[index % CHESS_PIECES.length];
             const shortSha = item.sha.substring(0, 7);
-            const dateStr = new Date(item.commit.author.date).toLocaleDateString(undefined, {
+            const dateStr = new Date(item.commit.author.date).toLocaleDateString(locale, {
               month: 'short',
               day: 'numeric',
               year: 'numeric'
@@ -90,7 +97,9 @@ export const ChessTimeline: React.FC = () => {
               >
                 <div className="move-header">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                    <span className="move-badge">Move #{commits.length - index} ({piece})</span>
+                    <span className="move-badge">
+                      {isGerman ? 'Zug' : 'Move'} #{commits.length - index} ({piece})
+                    </span>
                     <a
                       href={item.html_url}
                       target="_blank"

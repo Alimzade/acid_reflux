@@ -34,3 +34,4 @@ export interface Database {
 }
 
 export type PageView = 'pulse' | 'chess' | 'docs';
+export type Language = 'en' | 'de';

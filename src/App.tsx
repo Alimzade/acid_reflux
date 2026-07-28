@@ -5,7 +5,7 @@ import { MarketPulse } from './features/market-pulse/MarketPulse';
 import { ChessTimeline } from './features/chess-timeline/ChessTimeline';
 import { ConceptDocs } from './components/ConceptDocs';
 import dbData from './data/db.json';
-import { Database, PageView } from './types';
+import { Database, Language, PageView } from './types';
 
 const PATH_MAP: Record<string, PageView> = {
   '/home': 'pulse',
@@ -23,6 +23,12 @@ const PAGE_TO_PATH: Record<PageView, string> = {
 export function App() {
   const [db] = useState<Database>(dbData as Database);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = window.localStorage.getItem('acid-reflux-language');
+    return saved === 'de' || saved === 'en'
+      ? saved
+      : navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
+  });
 
   const getInitialPage = (): PageView => {
     const rawPath = window.location.pathname;
@@ -44,6 +50,11 @@ export function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  useEffect(() => {
+    window.localStorage.setItem('acid-reflux-language', language);
+    document.documentElement.lang = language;
+  }, [language]);
+
   const handlePageChange = (page: PageView) => {
     setActivePage(page);
     const basePath = window.location.pathname.includes('/acid_reflux') ? '/acid_reflux' : '';
@@ -58,6 +69,7 @@ export function App() {
         setActivePage={handlePageChange}
         collapsed={sidebarCollapsed}
         setCollapsed={setSidebarCollapsed}
+        language={language}
       />
 
       <div className="main-content-wrapper">
@@ -65,12 +77,14 @@ export function App() {
           info={db.projectInfo}
           sidebarCollapsed={sidebarCollapsed}
           setSidebarCollapsed={setSidebarCollapsed}
+          language={language}
+          setLanguage={setLanguage}
         />
 
         <main className="page-content">
-          {activePage === 'pulse' && <MarketPulse />}
-          {activePage === 'chess' && <ChessTimeline />}
-          {activePage === 'docs' && <ConceptDocs />}
+          {activePage === 'pulse' && <MarketPulse language={language} />}
+          {activePage === 'chess' && <ChessTimeline language={language} />}
+          {activePage === 'docs' && <ConceptDocs language={language} />}
         </main>
       </div>
     </div>

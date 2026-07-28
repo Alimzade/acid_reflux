@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ProjectInfo } from '../types';
+import { Language, ProjectInfo } from '../types';
 import { IconGlobe } from './Icons';
 
 interface HeaderProps {
   info: ProjectInfo;
   sidebarCollapsed: boolean;
   setSidebarCollapsed: (collapsed: boolean) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
 }
 
 const COLOR_PALETTE = [
@@ -17,7 +19,13 @@ const COLOR_PALETTE = [
   { name: 'Tactical Red', color: '#ef4444', glow: 'rgba(239, 68, 68, 0.5)' }
 ];
 
-export const Header: React.FC<HeaderProps> = ({ info, sidebarCollapsed, setSidebarCollapsed }) => {
+export const Header: React.FC<HeaderProps> = ({
+  info,
+  sidebarCollapsed,
+  setSidebarCollapsed,
+  language,
+  setLanguage
+}) => {
   const [now, setNow] = useState(() => new Date());
   const [colorIdx, setColorIdx] = useState(0);
 
@@ -26,7 +34,8 @@ export const Header: React.FC<HeaderProps> = ({ info, sidebarCollapsed, setSideb
     return () => window.clearInterval(timer);
   }, []);
 
-  const time = new Intl.DateTimeFormat(undefined, {
+  const locale = language === 'de' ? 'de-DE' : 'en-US';
+  const time = new Intl.DateTimeFormat(locale, {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
@@ -42,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ info, sidebarCollapsed, setSideb
   const mins = String(Math.abs(offsetMinutes) % 60).padStart(2, '0');
   const utcOffset = `UTC${sign}${hours}:${mins}`;
 
-  const formattedDate = new Intl.DateTimeFormat(undefined, {
+  const formattedDate = new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -50,6 +59,33 @@ export const Header: React.FC<HeaderProps> = ({ info, sidebarCollapsed, setSideb
   }).format(now);
 
   const activeColor = COLOR_PALETTE[colorIdx];
+  const copy = language === 'de'
+    ? {
+        collaboration: 'Aktive Zusammenarbeit',
+        currentTime: 'Aktuelle Uhrzeit',
+        changeColor: 'Klicken, um die Farbe zu ändern',
+        theme: 'Design',
+        cycle: 'Zum Wechseln klicken',
+        localTime: 'Ortszeit',
+        timezoneInfo: 'Zeitzoneninformationen',
+        timezone: 'Zeitzone:',
+        offset: 'Abweichung:',
+        date: 'Datum:',
+        language: 'Sprache'
+      }
+    : {
+        collaboration: 'Active Collaboration',
+        currentTime: 'Current time',
+        changeColor: 'Click to change color theme',
+        theme: 'Theme',
+        cycle: 'Click to cycle',
+        localTime: 'Local time',
+        timezoneInfo: 'Timezone Information',
+        timezone: 'Timezone:',
+        offset: 'Offset:',
+        date: 'Date:',
+        language: 'Language'
+      };
 
   const handleClockClick = () => {
     setColorIdx((prev) => (prev + 1) % COLOR_PALETTE.length);
@@ -58,18 +94,36 @@ export const Header: React.FC<HeaderProps> = ({ info, sidebarCollapsed, setSideb
   return (
     <header className="header">
       <div className="brand">
-        <span className="badge badge-active">Active Collaboration</span>
+        <span className="badge badge-active">{copy.collaboration}</span>
       </div>
       <div className="header-right">
+        <div className="language-switch" role="group" aria-label={copy.language}>
+          <button
+            type="button"
+            className={language === 'en' ? 'active' : ''}
+            onClick={() => setLanguage('en')}
+            aria-pressed={language === 'en'}
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            className={language === 'de' ? 'active' : ''}
+            onClick={() => setLanguage('de')}
+            aria-pressed={language === 'de'}
+          >
+            DE
+          </button>
+        </div>
         <div className="digital-clock-unified">
           <time
             className="digital-clock-main"
             dateTime={now.toISOString()}
-            aria-label={`Current time: ${time}. Click to change color theme.`}
+            aria-label={`${copy.currentTime}: ${time}. ${copy.changeColor}.`}
             onClick={handleClockClick}
-            title={`Theme: ${activeColor.name} (Click to cycle)`}
+            title={`${copy.theme}: ${activeColor.name} (${copy.cycle})`}
           >
-            <span className="digital-clock-label">Local time</span>
+            <span className="digital-clock-label">{copy.localTime}</span>
             <span
               className="digital-clock-time"
               style={{
@@ -84,20 +138,20 @@ export const Header: React.FC<HeaderProps> = ({ info, sidebarCollapsed, setSideb
           <div className="clock-divider"></div>
           
           <div className="clock-tz-trigger-wrapper">
-            <button className="clock-tz-square-btn" aria-label="Timezone Information">
+            <button className="clock-tz-square-btn" aria-label={copy.timezoneInfo}>
               <IconGlobe size={15} />
             </button>
             <div className="clock-tooltip">
               <div className="tooltip-row">
-                <span className="tooltip-label">Timezone:</span>
+                <span className="tooltip-label">{copy.timezone}</span>
                 <span className="tooltip-value">{timeZone}</span>
               </div>
               <div className="tooltip-row">
-                <span className="tooltip-label">Offset:</span>
+                <span className="tooltip-label">{copy.offset}</span>
                 <span className="tooltip-value">{utcOffset}</span>
               </div>
               <div className="tooltip-row">
-                <span className="tooltip-label">Date:</span>
+                <span className="tooltip-label">{copy.date}</span>
                 <span className="tooltip-value">{formattedDate}</span>
               </div>
             </div>

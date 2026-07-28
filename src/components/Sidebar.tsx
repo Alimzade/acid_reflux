@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageView } from '../types';
+import { Language, PageView } from '../types';
 import { IconMenu, IconHome, IconChess, IconMap, IconBook } from './Icons';
 
 interface SidebarProps {
@@ -7,6 +7,7 @@ interface SidebarProps {
   setActivePage: (page: PageView) => void;
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
+  language: Language;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -14,15 +15,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setActivePage,
   collapsed,
   setCollapsed,
+  language,
 }) => {
+  const copy = language === 'de'
+    ? {
+        toggle: 'Seitenleiste umschalten',
+        expand: 'Menü öffnen',
+        collapse: 'Menü schließen',
+        home: 'Startseite',
+        chessTitle: 'Schachpartie (Commit-Verlauf)',
+        chess: 'Schachverlauf',
+        docsTitle: 'Dokumentation & Ethos',
+        docs: 'Dokumentation'
+      }
+    : {
+        toggle: 'Toggle Sidebar',
+        expand: 'Expand menu',
+        collapse: 'Collapse menu',
+        home: 'Home',
+        chessTitle: 'Chess Match (Commit History)',
+        chess: 'Chess Timeline',
+        docsTitle: 'Documentation & Ethos',
+        docs: 'Documentation'
+      };
+
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
         <button
           className="sidebar-toggle-btn"
           onClick={() => setCollapsed(!collapsed)}
-          aria-label="Toggle Sidebar"
-          title={collapsed ? "Expand menu" : "Collapse menu"}
+          aria-label={copy.toggle}
+          title={collapsed ? copy.expand : copy.collapse}
         >
           <IconMenu size={18} />
         </button>
@@ -33,28 +57,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           className={`sidebar-link ${activePage === 'pulse' ? 'active' : ''}`}
           onClick={() => setActivePage('pulse')}
-          title="Home"
+          title={copy.home}
         >
           <span className="sidebar-icon"><IconHome size={18} /></span>
-          {!collapsed && <span className="sidebar-text">Home</span>}
+          {!collapsed && <span className="sidebar-text">{copy.home}</span>}
         </button>
 
         <button
           className={`sidebar-link ${activePage === 'chess' ? 'active' : ''}`}
           onClick={() => setActivePage('chess')}
-          title="Chess Match (Commit History)"
+          title={copy.chessTitle}
         >
           <span className="sidebar-icon"><IconChess size={18} /></span>
-          {!collapsed && <span className="sidebar-text">Chess Timeline</span>}
+          {!collapsed && <span className="sidebar-text">{copy.chess}</span>}
         </button>
 
         <button
           className={`sidebar-link ${activePage === 'docs' ? 'active' : ''}`}
           onClick={() => setActivePage('docs')}
-          title="Documentation & Ethos"
+          title={copy.docsTitle}
         >
           <span className="sidebar-icon"><IconBook size={18} /></span>
-          {!collapsed && <span className="sidebar-text">Documentation</span>}
+          {!collapsed && <span className="sidebar-text">{copy.docs}</span>}
         </button>
       </nav>
     </aside>
