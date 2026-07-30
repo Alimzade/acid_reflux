@@ -28,6 +28,17 @@ export const IconChess: React.FC<IconProps> = ({ size = 20, color = 'currentColo
   </svg>
 );
 
+export const IconTrophy: React.FC<IconProps> = ({ size = 20, color = 'currentColor', ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M8 4h8v5a4 4 0 0 1-8 0V4z"></path>
+    <path d="M8 6H5v1a4 4 0 0 0 4 4"></path>
+    <path d="M16 6h3v1a4 4 0 0 1-4 4"></path>
+    <path d="M12 13v4"></path>
+    <path d="M8 21h8"></path>
+    <path d="M9 17h6l1 4H8l1-4z"></path>
+  </svg>
+);
+
 export const IconMap: React.FC<IconProps> = ({ size = 20, color = 'currentColor', ...props }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>

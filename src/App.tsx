@@ -3,6 +3,7 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { MarketPulse } from './features/market-pulse/MarketPulse';
 import { ChessTimeline } from './features/chess-timeline/ChessTimeline';
+import { DailyDuoQuest } from './features/daily-duo-quest/DailyDuoQuest';
 import { ConceptDocs } from './components/ConceptDocs';
 import dbData from './data/db.json';
 import { Database, Language, PageView } from './types';
@@ -10,6 +11,7 @@ import { Database, Language, PageView } from './types';
 const PATH_MAP: Record<string, PageView> = {
   '/home': 'pulse',
   '/chess': 'chess',
+  '/quest': 'quest',
   '/docs': 'docs',
   '/': 'pulse'
 };
@@ -17,6 +19,7 @@ const PATH_MAP: Record<string, PageView> = {
 const PAGE_TO_PATH: Record<PageView, string> = {
   pulse: 'home',
   chess: 'chess',
+  quest: 'quest',
   docs: 'docs'
 };
 
@@ -84,6 +87,7 @@ export function App() {
         <main className="page-content">
           {activePage === 'pulse' && <MarketPulse language={language} />}
           {activePage === 'chess' && <ChessTimeline language={language} />}
+          {activePage === 'quest' && <DailyDuoQuest language={language} />}
           {activePage === 'docs' && <ConceptDocs language={language} />}
         </main>
       </div>

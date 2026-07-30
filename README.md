@@ -15,6 +15,25 @@ npm run dev     # Start local development server
 
 ---
 
+## Daily Duo Quest Firebase setup
+
+1. Create a Firebase project, then create a **Cloud Firestore** database for it.
+2. Register a web app in the Firebase project and copy `.env.example` to `.env.local`.
+3. Replace all six `VITE_FIREBASE_*` placeholders in `.env.local` with the web app configuration values.
+4. Deploy [firestore.rules](firestore.rules) using the Firebase console's **Rules** tab, or initialize the Firebase CLI with `firebase init firestore` and run `firebase deploy --only firestore:rules`.
+
+The quest works without Firebase configuration, but sync is disabled until every variable is set. These rules deliberately permit unauthenticated reads and structurally valid writes for the two-person shared quest. That means anyone who discovers the project can alter valid quest data; use Firebase Authentication and identity-based rules before using this pattern for private or sensitive data.
+
+Firestore rules tests require a local Java runtime with `java` available on `PATH`. Install Java, then run the isolated emulator suite on Windows with:
+
+```powershell
+npm.cmd run test:rules:emulator
+```
+
+The dedicated `npm.cmd run test:rules` command expects an already-running Firestore emulator and fails clearly when `FIRESTORE_EMULATOR_HOST` is absent. The normal `npm.cmd test` suite remains usable without Java and skips only the emulator-dependent rules cases.
+
+---
+
 ## Workflow & Deployment Pipeline
 
 ```

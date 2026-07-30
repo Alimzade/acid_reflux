@@ -33,5 +33,5 @@ export interface Database {
   moves: ChessMove[];
 }
 
-export type PageView = 'pulse' | 'chess' | 'docs';
+export type PageView = 'pulse' | 'chess' | 'quest' | 'docs';
 export type Language = 'en' | 'de';

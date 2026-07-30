@@ -1,0 +1,95 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function hasExactKeys(data, expectedKeys) {
+      return data.keys().hasOnly(expectedKeys) && data.keys().size() == expectedKeys.size();
+    }
+
+    function isText(value, minimumLength, maximumLength) {
+      return value is string
+        && value.size() >= minimumLength
+        && value.size() <= maximumLength;
+    }
+
+    function isMove(move) {
+      return hasExactKeys(move, ['text', 'completed'])
+        && isText(move.text, 1, 140)
+        && move.completed is bool;
+    }
+
+    function isMoves(moves) {
+      return hasExactKeys(moves, ['money', 'health', 'learning'])
+        && isMove(moves.money)
+        && isMove(moves.health)
+        && isMove(moves.learning);
+    }
+
+    function isAnswerIndex(answerIndex) {
+      return answerIndex == null
+        || (answerIndex is int && answerIndex >= 0 && answerIndex <= 3);
+    }
+
+    function isValidDateId(date) {
+      return date.matches('^[0-9]{4}-(01|03|05|07|08|10|12)-(0[1-9]|[12][0-9]|3[01])$')
+        || date.matches('^[0-9]{4}-(04|06|09|11)-(0[1-9]|[12][0-9]|30)$')
+        || date.matches('^[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])$')
+        || date.matches('^([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29$');
+    }
+
+    function isPlayer(player) {
+      return hasExactKeys(player, ['moves', 'germanSentence', 'answerIndex'])
+        && isMoves(player.moves)
+        && isText(player.germanSentence, 0, 200)
+        && isAnswerIndex(player.answerIndex);
+    }
+
+    function isPlayers(players) {
+      return hasExactKeys(players, ['alizade', 'sakar'])
+        && isPlayer(players.alizade)
+        && isPlayer(players.sakar);
+    }
+
+    function isValidQuest(quest) {
+      return hasExactKeys(quest, ['challengeId', 'players', 'updatedAt'])
+        && isText(quest.challengeId, 1, 120)
+        && isPlayers(quest.players)
+        && quest.updatedAt is timestamp
+        && quest.updatedAt == request.time;
+    }
+
+    function hasInitialAnswers(quest) {
+      return quest.players.alizade.answerIndex == null
+        && quest.players.sakar.answerIndex == null;
+    }
+
+    function answerCanUpdate(previousAnswer, nextAnswer) {
+      return previousAnswer == null
+        ? isAnswerIndex(nextAnswer)
+        : nextAnswer == previousAnswer;
+    }
+
+    function answersCanUpdate(previousPlayers, nextPlayers) {
+      return answerCanUpdate(
+          previousPlayers.alizade.answerIndex,
+          nextPlayers.alizade.answerIndex
+        )
+        && answerCanUpdate(
+          previousPlayers.sakar.answerIndex,
+          nextPlayers.sakar.answerIndex
+        );
+    }
+
+    match /daily_duo_quest/{date} {
+      allow read: if true;
+      allow create: if isValidDateId(date)
+        && isValidQuest(request.resource.data)
+        && hasInitialAnswers(request.resource.data);
+      allow update: if isValidQuest(request.resource.data)
+        && isValidDateId(date)
+        && request.resource.data.challengeId == resource.data.challengeId
+        && answersCanUpdate(resource.data.players, request.resource.data.players);
+      allow delete: if false;
+    }
+  }
+}
