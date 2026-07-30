@@ -1,0 +1,23 @@
+{
+  "query": "official AI release",
+  "follow_up_questions": null,
+  "answer": null,
+  "images": [],
+  "results": [
+    {
+      "url": "https://openai.com/index/example-release",
+      "title": "OpenAI publishes an example release",
+      "score": 0.9821,
+      "published_date": "2026-07-29T09:00:00.000Z",
+      "content": "Synthetic fixture shaped like a Tavily news search result."
+    },
+    {
+      "url": "https://openai.com/index/missing-publication-date",
+      "title": "Result without a publication date",
+      "score": 0.742,
+      "content": "This result must not enter the evidence pipeline."
+    }
+  ],
+  "response_time": 1.24,
+  "request_id": "fixture-request-id"
+}

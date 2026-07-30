@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import pulseData from '../data/pulse.json';
+import { OpportunityIntelligence } from '../features/opportunity-intelligence/OpportunityIntelligence';
+import '../features/opportunity-intelligence/OpportunityIntelligence.css';
 import { IconChevronLeft, IconChevronRight } from './Icons';
 import { Language } from '../types';
 
@@ -117,6 +119,7 @@ export function MarketPulse({ language }: { language: Language }) {
         formatDateLabel={formatDateLabel}
         language={language}
       />
+      <OpportunityIntelligence language={language} />
     </div>
   );
 }

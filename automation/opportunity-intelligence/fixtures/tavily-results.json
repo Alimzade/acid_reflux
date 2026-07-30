@@ -1,0 +1,51 @@
+[
+  {
+    "title": "OpenAI announces an example API capability",
+    "url": "https://openai.com/index/example?utm_source=radar#release",
+    "published_date": "2026-07-29T09:00:00.000Z",
+    "content": "Synthetic official company release.",
+    "days": 2
+  },
+  {
+    "title": "Regulator publishes AI guidance",
+    "url": "https://www.ftc.gov/news-events/news/press-releases/example",
+    "published_date": "2026-07-28T12:00:00.000Z",
+    "content": "Synthetic government regulator page.",
+    "days": 3
+  },
+  {
+    "title": "AI buyers expand enterprise pilots",
+    "url": "https://www.reuters.com/technology/ai-buyers-expand-pilots-2026-07-29/",
+    "published_date": "2026-07-29T15:00:00.000Z",
+    "content": "Synthetic reputable financial newsroom coverage.",
+    "days": 2
+  },
+  {
+    "title": "AI engineering teams adopt new deployment patterns",
+    "url": "https://www.technologyreview.com/2026/07/29/ai-engineering-patterns/",
+    "published_date": "2026-07-29T16:00:00.000Z",
+    "content": "Synthetic specialist publication coverage.",
+    "days": 2
+  },
+  {
+    "title": "OpenAI announces an example API capability",
+    "url": "https://openai.com/index/example?gclid=tracker",
+    "published_date": "2026-07-29T09:00:00.000Z",
+    "content": "Synthetic duplicate tracking URL.",
+    "days": 2
+  },
+  {
+    "title": "A stale story outside the query window",
+    "url": "https://www.reuters.com/technology/stale-story-2026-07-01/",
+    "published_date": "2026-07-01T08:00:00.000Z",
+    "content": "Synthetic stale story.",
+    "days": 2
+  },
+  {
+    "title": "Unverified AI trend prediction",
+    "url": "https://ai-hustle-blog.example/posts/trend",
+    "published_date": "2026-07-29T10:00:00.000Z",
+    "content": "Synthetic tier-three blog.",
+    "days": 2
+  }
+]

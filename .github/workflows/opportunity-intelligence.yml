@@ -1,0 +1,125 @@
+name: Refresh Opportunity Intelligence
+
+on:
+  schedule:
+    - cron: '30 5 * * 1-6'
+    - cron: '0 7 * * 0'
+  workflow_dispatch:
+    inputs:
+      report_type:
+        description: Report to generate
+        required: false
+        type: choice
+        options: [daily, weekly]
+        default: daily
+      dry_run:
+        description: Generate and validate without committing data
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: opportunity-intelligence-publisher
+  cancel-in-progress: false
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Resolve report options
+        id: options
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "kind=${{ inputs.report_type }}" >> "$GITHUB_OUTPUT"
+            echo "dry_run=${{ inputs.dry_run }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event.schedule }}" == "0 7 * * 0" ]]; then
+            echo "kind=weekly" >> "$GITHUB_OUTPUT"
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "kind=daily" >> "$GITHUB_OUTPUT"
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate opportunity report
+        env:
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          XAI_MODEL: ${{ vars.XAI_MODEL || 'grok-4.3' }}
+          XAI_MAX_TOKENS_DAILY: ${{ vars.XAI_MAX_TOKENS_DAILY }}
+          XAI_MAX_TOKENS_WEEKLY: ${{ vars.XAI_MAX_TOKENS_WEEKLY }}
+          XAI_REASONING_EFFORT_DAILY: ${{ vars.XAI_REASONING_EFFORT_DAILY }}
+          XAI_REASONING_EFFORT_WEEKLY: ${{ vars.XAI_REASONING_EFFORT_WEEKLY }}
+          OPPORTUNITY_MAX_QUERIES: ${{ vars.OPPORTUNITY_MAX_QUERIES }}
+          TAVILY_MAX_RESULTS_PER_QUERY: ${{ vars.TAVILY_MAX_RESULTS_PER_QUERY }}
+        shell: bash
+        run: |
+          if [[ "${{ steps.options.outputs.dry_run }}" == "true" ]]; then
+            npm run "intelligence:${{ steps.options.outputs.kind }}" -- --dry-run
+          else
+            npm run "intelligence:${{ steps.options.outputs.kind }}"
+          fi
+
+      - name: Detect generated data changes
+        id: generated-data
+        shell: bash
+        run: |
+          if [[ -z "$(git status --porcelain -- src/data/opportunity-daily.json src/data/opportunity-weekly.json)" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and publish generated data
+        if: steps.options.outputs.dry_run != 'true' && steps.generated-data.outputs.changed == 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- src/data/opportunity-daily.json src/data/opportunity-weekly.json
+          git commit -m "chore: refresh opportunity intelligence"
+          git pull --rebase origin main
+          npm ci
+          npm run intelligence:validate
+          npm test
+          npm run build
+
+          if ! git push origin HEAD:main; then
+            echo "Initial push failed; rebasing once and retrying. Branch protection may reject this workflow." >&2
+            git pull --rebase origin main
+            npm ci
+            npm run intelligence:validate
+            npm test
+            npm run build
+            if ! git push origin HEAD:main; then
+              echo "Publishing failed after one retry. Check branch protection and the workflow's contents: write permission." >&2
+              exit 1
+            fi
+          fi
+
+      - name: Trigger GitHub Pages deployment
+        if: steps.options.outputs.dry_run != 'true' && steps.generated-data.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/${GITHUB_REPOSITORY}/dispatches" --raw-field event_type=opportunity-intelligence-published
