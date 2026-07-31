@@ -17,6 +17,11 @@ on:
         required: false
         type: boolean
         default: true
+      debug_evidence:
+        description: Print sanitized Tavily evidence diagnostics
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -54,12 +59,19 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "kind=${{ inputs.report_type }}" >> "$GITHUB_OUTPUT"
             echo "dry_run=${{ inputs.dry_run }}" >> "$GITHUB_OUTPUT"
+            if [[ "${{ inputs.debug_evidence }}" == "true" ]]; then
+              echo "debug_flag=--debug-evidence" >> "$GITHUB_OUTPUT"
+            else
+              echo "debug_flag=" >> "$GITHUB_OUTPUT"
+            fi
           elif [[ "${{ github.event.schedule }}" == "0 7 * * 0" ]]; then
             echo "kind=weekly" >> "$GITHUB_OUTPUT"
             echo "dry_run=false" >> "$GITHUB_OUTPUT"
+            echo "debug_flag=" >> "$GITHUB_OUTPUT"
           else
             echo "kind=daily" >> "$GITHUB_OUTPUT"
             echo "dry_run=false" >> "$GITHUB_OUTPUT"
+            echo "debug_flag=" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Generate opportunity report
@@ -83,9 +95,9 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ steps.options.outputs.dry_run }}" == "true" ]]; then
-            npm run "intelligence:${{ steps.options.outputs.kind }}" -- --dry-run
+            npm run "intelligence:${{ steps.options.outputs.kind }}" -- --dry-run ${{ steps.options.outputs.debug_flag }}
           else
-            npm run "intelligence:${{ steps.options.outputs.kind }}"
+            npm run "intelligence:${{ steps.options.outputs.kind }}" -- ${{ steps.options.outputs.debug_flag }}
           fi
 
       - name: Detect generated data changes

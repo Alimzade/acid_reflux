@@ -7,6 +7,13 @@ const workflow = readFileSync(
 );
 
 describe('opportunity publishing workflow hardening', () => {
+  it('offers opt-in Tavily diagnostics for manual runs and forwards the CLI flag', () => {
+    expect(workflow).toContain('debug_evidence:');
+    expect(workflow).toContain('inputs.debug_evidence');
+    expect(workflow).toContain('debug_flag=--debug-evidence');
+    expect(workflow).toContain('steps.options.outputs.debug_flag');
+  });
+
   it('uses Gemini by default while retaining explicit xAI fallback configuration', () => {
     expect(workflow).toContain("LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'gemini' }}");
     expect(workflow).toContain('GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}');

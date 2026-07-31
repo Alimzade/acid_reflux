@@ -76,6 +76,7 @@ export interface RunOpportunityPipelineOptions {
   env?: Record<string, string | undefined>;
   collectionLimits?: CollectionLimits;
   model?: string;
+  debugLog?: (message: string) => void;
 }
 
 export interface OpportunityPipelineSummary {
@@ -142,6 +143,54 @@ function sanitizeError(error: unknown): Error {
     .replace(/\s+/g, ' ')
     .slice(0, 1_000);
   return new Error(message);
+}
+
+function emitDebugLine(
+  debugLog: RunOpportunityPipelineOptions['debugLog'],
+  value: UnknownRecord,
+  env: Record<string, string | undefined> | undefined,
+): void {
+  if (!debugLog) return;
+  let line = JSON.stringify(value);
+  const secrets = [env?.TAVILY_API_KEY, env?.GEMINI_API_KEY, env?.XAI_API_KEY]
+    .filter((secret): secret is string => typeof secret === 'string' && secret.length > 0);
+  for (const secret of secrets) line = line.split(secret).join('[REDACTED]');
+  try {
+    debugLog(line);
+  } catch {
+    // Diagnostics must never change collection or publishing behavior.
+  }
+}
+
+function emitEvidenceDiagnostics(
+  options: RunOpportunityPipelineOptions,
+  collected: CollectedSearchResult[],
+  evidence: SynthesisEvidenceRecord[],
+): void {
+  if (!options.debugLog) return;
+  const failedSearches = collected.filter((entry) => entry.error !== undefined).length;
+  emitDebugLine(options.debugLog, {
+    type: 'opportunity-debug-summary',
+    queryFamilies: collected.length,
+    successfulSearches: collected.length - failedSearches,
+    failedSearches,
+    rawResults: collected.reduce((total, entry) => total + (entry.results?.length ?? 0), 0),
+    normalizedEvidence: evidence.length,
+    qualifyingPrimary: evidence.filter((record) => record.primary && record.tier <= 2).length,
+  }, options.env);
+  evidence.forEach((record) => emitDebugLine(options.debugLog, {
+    type: 'opportunity-debug-evidence',
+    id: record.id,
+    lane: record.radar,
+    topic: record.topic,
+    title: record.title,
+    url: record.url,
+    domain: new URL(record.url).hostname.toLowerCase().replace(/^www\./, ''),
+    publishedAt: record.publishedAt,
+    tier: record.tier,
+    primary: record.primary,
+    excerpt: record.factualStatement.trim().replace(/\s+/g, ' ').slice(0, 200),
+  }, options.env));
 }
 
 async function collectSearches(
@@ -496,6 +545,7 @@ export async function runOpportunityPipeline(
     const collected = await collectSearches(queries, options.search, options.now);
     const searchFailures = collected.filter((entry) => entry.error !== undefined).length;
     const evidence = buildSynthesisEvidence(collected, options.now);
+    emitEvidenceDiagnostics(options, collected, evidence);
     const successfulQueryFamilies = collected.length - searchFailures;
     const requiredSuccessfulFamilies = Math.ceil(queries.length / 2);
     const qualifyingPrimary = evidence.filter((record) => record.primary && record.tier <= 2);

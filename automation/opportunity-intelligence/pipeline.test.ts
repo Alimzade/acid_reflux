@@ -168,6 +168,72 @@ describe('opportunity pipeline publishing', () => {
     });
   });
 
+  it('emits normalized and secret-safe Tavily evidence only when debug logging is enabled', async () => {
+    const outputDir = await temporaryOutputDirectory();
+    const debugLines: string[] = [];
+    const longContent = `  Tavily   finding ${'x'.repeat(240)} tavily-debug-secret  `;
+
+    await runOpportunityPipeline({
+      kind: 'daily',
+      dryRun: true,
+      now,
+      search: async (query, options) => {
+        const results = await searchWithBothLanes(query, options);
+        return results.map((result) => ({ ...result, content: longContent }));
+      },
+      synthesize: async (input) => draftFor(input),
+      outputDir,
+      env: { TAVILY_API_KEY: 'tavily-debug-secret' },
+      debugLog: (message) => debugLines.push(message),
+    });
+
+    const diagnostics = debugLines.map((line) => JSON.parse(line));
+    expect(diagnostics[0]).toMatchObject({
+      type: 'opportunity-debug-summary',
+      queryFamilies: 5,
+      successfulSearches: 5,
+      failedSearches: 0,
+      rawResults: 5,
+      normalizedEvidence: 2,
+      qualifyingPrimary: 2,
+    });
+    const evidence = diagnostics.slice(1);
+    expect(evidence).toHaveLength(2);
+    expect(evidence).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        type: 'opportunity-debug-evidence',
+        id: expect.stringMatching(/^evidence-/),
+        lane: 'build',
+        title: 'Official API capability',
+        url: 'https://openai.com/index/api-capability',
+        domain: 'openai.com',
+        publishedAt: '2026-07-30T09:00:00.000Z',
+        tier: 1,
+        primary: true,
+        excerpt: expect.any(String),
+      }),
+    ]));
+    expect(evidence.every((entry) => entry.excerpt.length <= 200)).toBe(true);
+    expect(debugLines.join('\n')).not.toContain('tavily-debug-secret');
+    expect(debugLines.join('\n')).not.toContain('  Tavily   finding');
+  });
+
+  it('emits no Tavily evidence diagnostics when debug logging is disabled', async () => {
+    const outputDir = await temporaryOutputDirectory();
+    const debugLog = vi.fn();
+
+    await runOpportunityPipeline({
+      kind: 'daily',
+      dryRun: true,
+      now,
+      search: searchWithBothLanes,
+      synthesize: async (input) => draftFor(input),
+      outputDir,
+    });
+
+    expect(debugLog).not.toHaveBeenCalled();
+  });
+
   it('never exceeds three concurrent searches', async () => {
     const outputDir = await temporaryOutputDirectory();
     let active = 0;
@@ -1149,11 +1215,18 @@ describe('bootstrap report files', () => {
 
 describe('opportunity pipeline CLI', () => {
   it('parses only the documented kind and dry-run flags', () => {
-    expect(parseCliArgs(['--kind', 'daily'])).toEqual({ kind: 'daily', dryRun: false });
-    expect(parseCliArgs(['--dry-run', '--kind=weekly'])).toEqual({ kind: 'weekly', dryRun: true });
+    expect(parseCliArgs(['--kind', 'daily'])).toEqual({
+      kind: 'daily', dryRun: false, debugEvidence: false,
+    });
+    expect(parseCliArgs(['--dry-run', '--kind=weekly', '--debug-evidence'])).toEqual({
+      kind: 'weekly', dryRun: true, debugEvidence: true,
+    });
     expect(() => parseCliArgs(['--kind', 'monthly'])).toThrow('daily or weekly');
     expect(() => parseCliArgs(['--verbose', '--kind', 'daily'])).toThrow('Unknown flag');
     expect(() => parseCliArgs(['--dry-run'])).toThrow('--kind');
+    expect(() => parseCliArgs([
+      '--kind=daily', '--debug-evidence', '--debug-evidence',
+    ])).toThrow('Duplicate flag: --debug-evidence');
   });
 
   it('requires Tavily and the default Gemini API key before invoking either client', async () => {

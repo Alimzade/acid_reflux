@@ -12,6 +12,7 @@ import { resolveSynthesisProvider } from './provider';
 export interface CliArguments {
   kind: QueryKind;
   dryRun: boolean;
+  debugEvidence: boolean;
 }
 
 export interface CliDependencies {
@@ -26,12 +27,19 @@ export interface CliDependencies {
 export function parseCliArgs(args: readonly string[]): CliArguments {
   let kind: QueryKind | undefined;
   let dryRun = false;
+  let debugEvidence = false;
 
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     if (argument === '--dry-run') {
       if (dryRun) throw new Error('Duplicate flag: --dry-run');
       dryRun = true;
+      continue;
+    }
+
+    if (argument === '--debug-evidence') {
+      if (debugEvidence) throw new Error('Duplicate flag: --debug-evidence');
+      debugEvidence = true;
       continue;
     }
 
@@ -49,7 +57,7 @@ export function parseCliArgs(args: readonly string[]): CliArguments {
   }
 
   if (!kind) throw new Error('--kind is required');
-  return { kind, dryRun };
+  return { kind, dryRun, debugEvidence };
 }
 
 function safeMessage(error: unknown, env: Record<string, string | undefined>): string {
@@ -84,6 +92,7 @@ export async function runCli(
       outputDir: overrides.outputDir ?? fileURLToPath(new URL('../../src/data/', import.meta.url)),
       env,
       model: provider.model,
+      debugLog: parsed.debugEvidence ? (message) => log(message) : undefined,
     });
     log(JSON.stringify(result));
     return 0;
