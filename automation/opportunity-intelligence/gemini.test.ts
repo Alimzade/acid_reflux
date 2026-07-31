@@ -72,7 +72,7 @@ describe('Gemini synthesis adapter', () => {
     expect(body.contents[0].parts[0].text).toContain('evidence-001');
     expect(body.generationConfig.maxOutputTokens).toBe(2200);
     expect(body.generationConfig.thinkingConfig.thinkingLevel).toBe('low');
-    expect(body.generationConfig.responseFormat.text.mimeType).toBe('application/json');
+    expect(body.generationConfig.responseFormat.text.mimeType).toBe('APPLICATION_JSON');
     expect(body.generationConfig.responseFormat.text.schema).not.toHaveProperty(
       'properties.thesis',
     );

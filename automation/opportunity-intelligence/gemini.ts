@@ -110,7 +110,7 @@ export async function synthesizeWithGemini(input: SynthesisInput): Promise<Synth
             thinkingConfig: { thinkingLevel: config.thinkingLevel },
             responseFormat: {
               text: {
-                mimeType: 'application/json',
+                mimeType: 'APPLICATION_JSON',
                 schema: synthesisResponseSchemaFor(input.kind),
               },
             },
