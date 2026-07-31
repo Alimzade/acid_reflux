@@ -1156,7 +1156,7 @@ describe('opportunity pipeline CLI', () => {
     expect(() => parseCliArgs(['--dry-run'])).toThrow('--kind');
   });
 
-  it('requires both API keys before invoking either injected client', async () => {
+  it('requires Tavily and the default Gemini API key before invoking either client', async () => {
     const outputDir = await temporaryOutputDirectory();
     const search = vi.fn(searchWithBothLanes);
     const synthesize = vi.fn(async (input: SynthesisInput) => draftFor(input));
@@ -1174,7 +1174,7 @@ describe('opportunity pipeline CLI', () => {
     expect(exitCode).toBe(1);
     expect(search).not.toHaveBeenCalled();
     expect(synthesize).not.toHaveBeenCalled();
-    expect(messages).toEqual([expect.stringContaining('XAI_API_KEY')]);
+    expect(messages).toEqual([expect.stringContaining('GEMINI_API_KEY')]);
   });
 
   it('prints only a validated dry-run summary and returns success', async () => {
@@ -1185,7 +1185,7 @@ describe('opportunity pipeline CLI', () => {
     const exitCode = await runCli(['--kind=weekly', '--dry-run'], {
       env: {
         TAVILY_API_KEY: 'tavily-cli-secret',
-        XAI_API_KEY: 'xai-cli-secret',
+        GEMINI_API_KEY: 'gemini-cli-secret',
         OPPORTUNITY_MAX_QUERIES: '5',
         TAVILY_MAX_RESULTS_PER_QUERY: '4',
       },
@@ -1218,7 +1218,7 @@ describe('opportunity pipeline CLI', () => {
     });
     expect(messages[0]).not.toContain('The vendor announced');
     expect(messages[0]).not.toContain('tavily-cli-secret');
-    expect(messages[0]).not.toContain('xai-cli-secret');
+    expect(messages[0]).not.toContain('gemini-cli-secret');
     expect(search).toHaveBeenCalledTimes(5);
     expect(search.mock.calls.every(([, options]) => options.maxResults === 4)).toBe(true);
     await expect(readFile(join(outputDir, 'opportunity-weekly.json'))).rejects.toMatchObject({ code: 'ENOENT' });

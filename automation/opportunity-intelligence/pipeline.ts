@@ -75,6 +75,7 @@ export interface RunOpportunityPipelineOptions {
   outputDir: string;
   env?: Record<string, string | undefined>;
   collectionLimits?: CollectionLimits;
+  model?: string;
 }
 
 export interface OpportunityPipelineSummary {
@@ -529,7 +530,7 @@ export async function runOpportunityPipeline(
     const windowMilliseconds = maximumLookbackDays * 24 * 60 * 60 * 1_000;
     const baseInput: SynthesisInput = {
       kind: options.kind,
-      model: resolveXaiModel(options.env),
+      model: options.model ?? resolveXaiModel(options.env),
       generatedAt,
       windowStart: new Date(options.now.getTime() - windowMilliseconds).toISOString(),
       windowEnd: generatedAt,

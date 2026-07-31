@@ -43,21 +43,23 @@ The repository refreshes its generated opportunity reports with GitHub Actions. 
 Configure these two repository **Actions secrets** (never `VITE_*` variables):
 
 - `TAVILY_API_KEY` — research API key.
-- `XAI_API_KEY` — synthesis API key.
+- `GEMINI_API_KEY` — default synthesis API key, created in Google AI Studio.
 
 Optionally configure these repository variables. Blank variables use the defaults; numeric overrides are validated and clamped to safe bounds:
 
-- `XAI_MODEL` — trimmed model ID; default `grok-4.3`.
-- `XAI_MAX_TOKENS_DAILY` / `XAI_MAX_TOKENS_WEEKLY` — defaults `2200` / `4000`, clamped to `256–8000`.
-- `XAI_REASONING_EFFORT_DAILY` / `XAI_REASONING_EFFORT_WEEKLY` — defaults `low` / `medium`; accepted values are `low`, `medium`, or `high`.
+- `LLM_PROVIDER` — `gemini` by default; set to `xai` only to use the optional xAI fallback.
+- `GEMINI_MODEL` — trimmed model ID; default `gemini-3.5-flash`.
+- `GEMINI_MAX_OUTPUT_TOKENS_DAILY` / `GEMINI_MAX_OUTPUT_TOKENS_WEEKLY` — defaults `2200` / `4000`, clamped to `256–8000`.
+- `GEMINI_THINKING_LEVEL_DAILY` / `GEMINI_THINKING_LEVEL_WEEKLY` — defaults `low` / `medium`; accepted values are `low`, `medium`, or `high`.
+- `XAI_MODEL` and the existing `XAI_*` cost controls remain available when `LLM_PROVIDER=xai`; that mode also requires the `XAI_API_KEY` Actions secret.
 - `OPPORTUNITY_MAX_QUERIES` — maximum query families per run, clamped to `2–5` daily and `2–8` weekly; every capped pack retains both Build and Career queries.
 - `TAVILY_MAX_RESULTS_PER_QUERY` — maximum results per query, clamped to `1–10`.
 
-To validate a run, open **Actions → Refresh Opportunity Intelligence → Run workflow**, select `daily` or `weekly`, leave **dry_run** enabled (the default), then inspect the logs and generated report summary. A real dry run still calls Tavily and xAI, requires both secrets, and consumes provider credits; it only prevents the generated report from being written, committed, or pushed. Automated tests use recorded fixtures and intercepted requests, so they make no provider calls. Disable **dry_run** only after the output is acceptable. Scheduled jobs use the same production path and publish only a changed, valid report.
+To validate a run, open **Actions → Refresh Opportunity Intelligence → Run workflow**, select `daily` or `weekly`, leave **dry_run** enabled (the default), then inspect the logs and generated report summary. A real dry run still calls Tavily and Gemini, requires both default secrets, and consumes provider quota; it only prevents the generated report from being written, committed, or pushed. Automated tests use recorded fixtures and intercepted requests, so they make no provider calls. Disable **dry_run** only after the output is acceptable. Scheduled jobs use the same production path and publish only a changed, valid report.
 
-The default budget is **5 Tavily searches × 10 results** for daily and **8 × 10** for weekly. Each run normally makes **one xAI request** and at most **two** when the first structured response needs its single validation-repair attempt. Daily xAI requests use `max_tokens: 2200` with `reasoning_effort: low`; weekly requests use `max_tokens: 4000` with `reasoning_effort: medium`. CLI summaries log only sanitized request counts and provider token-usage counts across both attempts—never prompts, source content, response content, or secrets.
+The default budget is **5 Tavily searches × 10 results** for daily and **8 × 10** for weekly. Each run normally makes **one Gemini request** and at most **two** when the first structured response needs its single validation-repair attempt. Daily requests use 2,200 maximum output tokens with low thinking; weekly requests use 4,000 with medium thinking. CLI summaries log only sanitized request counts and provider token-usage counts across both attempts—never prompts, source content, response content, or secrets.
 
-Tavily requests follow the current news-search contract: `Authorization: Bearer …`, `topic: news`, advanced depth, disabled answer/raw-content fields, an exact UTC `start_date`, and an exclusive `end_date` set to the next UTC calendar day after the injected run time. The API key is never placed in the JSON body, and undated or future-dated results are discarded during normalization. xAI uses the Chat Completions-compatible `max_tokens` and `reasoning_effort` fields.
+Tavily requests follow the current news-search contract: `Authorization: Bearer …`, `topic: news`, advanced depth, disabled answer/raw-content fields, an exact UTC `start_date`, and an exclusive `end_date` set to the next UTC calendar day after the injected run time. The API key is never placed in the JSON body, and undated or future-dated results are discarded during normalization. Gemini uses its native `generateContent` endpoint with a structured JSON response schema; provider output is still validated against the collected evidence before publishing.
 
 Generated files are automation-owned: `src/data/opportunity-daily.json` and `src/data/opportunity-weekly.json`. Do not hand-edit them; the last known good committed report remains live when generation, validation, or publishing fails.
 

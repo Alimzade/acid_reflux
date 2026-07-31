@@ -1,6 +1,5 @@
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
-import { synthesizeWithGrok } from './grok';
 import {
   runOpportunityPipeline,
   type OpportunitySearch,
@@ -8,6 +7,7 @@ import {
 } from './pipeline';
 import type { QueryKind } from './queryPacks';
 import { searchTavily } from './tavily';
+import { resolveSynthesisProvider } from './provider';
 
 export interface CliArguments {
   kind: QueryKind;
@@ -54,7 +54,7 @@ export function parseCliArgs(args: readonly string[]): CliArguments {
 
 function safeMessage(error: unknown, env: Record<string, string | undefined>): string {
   let message = error instanceof Error ? error.message : String(error);
-  for (const secret of [env.TAVILY_API_KEY, env.XAI_API_KEY]) {
+  for (const secret of [env.TAVILY_API_KEY, env.GEMINI_API_KEY, env.XAI_API_KEY]) {
     if (secret) message = message.split(secret).join('[REDACTED]');
   }
   return message
@@ -72,19 +72,18 @@ export async function runCli(
 
   try {
     const parsed = parseCliArgs(args);
-    const missingKeys = ['TAVILY_API_KEY', 'XAI_API_KEY'].filter((name) => !env[name]);
-    if (missingKeys.length > 0) {
-      throw new Error(`Missing required environment variables: ${missingKeys.join(', ')}`);
-    }
+    if (!env.TAVILY_API_KEY) throw new Error('Missing required environment variable: TAVILY_API_KEY');
+    const provider = resolveSynthesisProvider(env);
 
     const result = await runOpportunityPipeline({
       kind: parsed.kind,
       dryRun: parsed.dryRun,
       now: (overrides.now ?? (() => new Date()))(),
       search: overrides.search ?? searchTavily,
-      synthesize: overrides.synthesize ?? synthesizeWithGrok,
+      synthesize: overrides.synthesize ?? provider.synthesize,
       outputDir: overrides.outputDir ?? fileURLToPath(new URL('../../src/data/', import.meta.url)),
       env,
+      model: provider.model,
     });
     log(JSON.stringify(result));
     return 0;

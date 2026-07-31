@@ -7,6 +7,13 @@ const workflow = readFileSync(
 );
 
 describe('opportunity publishing workflow hardening', () => {
+  it('uses Gemini by default while retaining explicit xAI fallback configuration', () => {
+    expect(workflow).toContain("LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'gemini' }}");
+    expect(workflow).toContain('GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}');
+    expect(workflow).toContain("GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.5-flash' }}");
+    expect(workflow).toContain('XAI_API_KEY: ${{ secrets.XAI_API_KEY }}');
+  });
+
   it('validates generated reports, tests, and builds after every rebase and before each push', () => {
     const firstPushSafetySequence = [
       'git pull --rebase origin main',

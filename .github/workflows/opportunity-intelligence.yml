@@ -65,6 +65,13 @@ jobs:
       - name: Generate opportunity report
         env:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'gemini' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.5-flash' }}
+          GEMINI_MAX_OUTPUT_TOKENS_DAILY: ${{ vars.GEMINI_MAX_OUTPUT_TOKENS_DAILY }}
+          GEMINI_MAX_OUTPUT_TOKENS_WEEKLY: ${{ vars.GEMINI_MAX_OUTPUT_TOKENS_WEEKLY }}
+          GEMINI_THINKING_LEVEL_DAILY: ${{ vars.GEMINI_THINKING_LEVEL_DAILY }}
+          GEMINI_THINKING_LEVEL_WEEKLY: ${{ vars.GEMINI_THINKING_LEVEL_WEEKLY }}
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
           XAI_MODEL: ${{ vars.XAI_MODEL || 'grok-4.3' }}
           XAI_MAX_TOKENS_DAILY: ${{ vars.XAI_MAX_TOKENS_DAILY }}
