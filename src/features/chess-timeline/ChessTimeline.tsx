@@ -49,14 +49,17 @@ export const ChessTimeline: React.FC<{ language: Language }> = ({ language }) =>
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="market-pulse" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
+      <div className="market-pulse-header" style={{ marginBottom: 0 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <IconChess size={24} color="var(--accent-purple)" />
-            <h2>{isGerman ? 'Commit-Protokoll der Schachpartie' : 'Chess Match Commit Log'}</h2>
+          <span className="section-kicker">{isGerman ? 'LIVE-REPOSITORY-AKTIVITÄT' : 'LIVE REPOSITORY ACTIVITY'}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginTop: '0.25rem' }}>
+            <IconChess size={32} color="var(--accent-purple)" />
+            <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 800, lineHeight: 1.1, margin: 0 }}>
+              {isGerman ? 'Schach Commit-Log' : 'Chess Commit Log'}
+            </h2>
           </div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.2rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.45rem' }}>
             {isGerman
               ? 'Live-GitHub-Commit-Verlauf im Stil taktischer Schachzüge'
               : 'Live GitHub commit history styled as tactical chess moves'}
