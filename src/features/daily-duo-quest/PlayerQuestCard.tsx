@@ -128,7 +128,6 @@ export function PlayerQuestCard({
           <span>/6 XP</span>
         </div>
       </header>
-      <p className="duo-player-instructions">{copy.moveInstructions}</p>
 
       <div className="duo-move-list">
         {moveKeys.map((move) => {
@@ -167,9 +166,6 @@ export function PlayerQuestCard({
                   </span>
                 </label>
               </div>
-              <span className="duo-character-count" aria-live="off">
-                {140 - drafts[move].length} {copy.charactersRemaining}
-              </span>
             </div>
           );
         })}

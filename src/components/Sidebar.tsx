@@ -1,6 +1,6 @@
 import React from 'react';
 import { Language, PageView } from '../types';
-import { IconMenu, IconHome, IconChess, IconTrophy, IconMap, IconBook } from './Icons';
+import { IconMenu, IconHome, IconChess, IconGlobe, IconBook } from './Icons';
 
 interface SidebarProps {
   activePage: PageView;
@@ -25,8 +25,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         home: 'Startseite',
         chessTitle: 'Schachpartie (Commit-Verlauf)',
         chess: 'Schachverlauf',
-        questTitle: 'T\u00e4gliche Duo-Quest',
-        quest: 'Duo-Quest',
+        questTitle: 'Sprachen-Lernzentrum',
+        quest: 'Sprachen',
         docsTitle: 'Dokumentation & Ethos',
         docs: 'Dokumentation'
       }
@@ -37,8 +37,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         home: 'Home',
         chessTitle: 'Chess Match (Commit History)',
         chess: 'Chess Timeline',
-        questTitle: 'Daily Duo Quest',
-        quest: 'Duo Quest',
+        questTitle: 'Language Learning Hub',
+        quest: 'Languages',
         docsTitle: 'Documentation & Ethos',
         docs: 'Documentation'
       };
@@ -72,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => setActivePage('quest')}
           title={copy.questTitle}
         >
-          <span className="sidebar-icon"><IconTrophy size={18} /></span>
+          <span className="sidebar-icon"><IconGlobe size={18} /></span>
           {!collapsed && <span className="sidebar-text">{copy.quest}</span>}
         </button>
 

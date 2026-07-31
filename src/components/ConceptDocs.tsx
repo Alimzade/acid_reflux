@@ -38,6 +38,16 @@ export const ConceptDocs: React.FC<{ language: Language }> = ({ language }) => {
             : <>To prevent collision in an uncoordinated setup, developers and AIs commit frequently and run <code>git pull --rebase</code> before every push.</>}
         </p>
       </div>
+      <div className="glass-card">
+        <h3 style={{ marginBottom: '0.8rem', color: 'var(--accent-cyan)' }}>
+          {isGerman ? '🎨 Designsystem' : '🎨 Design System'}
+        </h3>
+        <p>
+          {isGerman
+            ? 'Das Projekt nutzt ein dunkles Glassmorphismus-Designsystem. Alle Komponenten müssen CSS-Variablen aus index.css verwenden und ein einheitliches visuelles Erlebnis bieten.'
+            : 'The project uses a premium dark glassmorphic design system. All components must use CSS variables from index.css and provide a consistent visual experience.'}
+        </p>
+      </div>
     </div>
   );
 };

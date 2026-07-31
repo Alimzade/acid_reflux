@@ -28,9 +28,7 @@ export function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [language, setLanguage] = useState<Language>(() => {
     const saved = window.localStorage.getItem('acid-reflux-language');
-    return saved === 'de' || saved === 'en'
-      ? saved
-      : navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
+    return saved === 'de' || saved === 'en' ? saved : 'de';
   });
 
   const getInitialPage = (): PageView => {

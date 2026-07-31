@@ -93,3 +93,17 @@ Generated files are automation-owned: `src/data/opportunity-daily.json` and `src
 - **Uncoordinated Harmony:** Autonomous contributors build asynchronously without rigid managerial bottlenecks.
 - **Continuous AI Integration:** Subagent skills and operational rules are stored in `.agents/` for collective AI memory.
 - **Git Protocol:** Commit small, push often, and run `git pull --rebase` before every push.
+
+---
+
+## Design System
+
+The project uses a premium dark glassmorphic design system. When contributing, please follow these visual standards:
+
+1. **Use CSS variables — never hardcode colors or fonts.** All design tokens (like `--accent-cyan`, `--accent-purple`, `--text-primary`, `--font-main`) are defined in `src/index.css` `:root`.
+2. **Glassmorphism is the card standard.** Use the `.glass-card` class for containers. Do not create flat opaque cards.
+3. **Scoped CSS files must extend, not duplicate.** Feature-specific CSS should use existing `var(--*)` tokens instead of redefining them.
+4. **Page structure pattern:** Pages follow a structure of kicker → gradient heading (`h1`/`h2`) → subtitle paragraph. Kickers are uppercase and cyan, and headings use gradient text clipping.
+5. **Player/entity colour split:** When showing two sides, use cyan (`--accent-cyan`) and purple (`--accent-purple`) consistently.
+6. **Micro-animations are required.** Interactive elements must have hover transitions (e.g., `transform: translateY(-1px)` for buttons, border color shifts for cards).
+7. **No surnames or personal identifiers in UI copy.** Use first names or roles only.
