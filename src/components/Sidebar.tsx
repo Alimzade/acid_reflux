@@ -23,8 +23,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         expand: 'Menü öffnen',
         collapse: 'Menü schließen',
         home: 'Startseite',
-        chessTitle: 'Commited (Commit-Verlauf)',
-        chess: 'Commited',
+        chessTitle: 'Dev Commits (Commit-Verlauf)',
+        chess: 'Dev Commits',
         questTitle: 'Sprachen-Lernzentrum',
         quest: 'Sprachen',
         docsTitle: 'Dokumentation & Ethos',
@@ -35,8 +35,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         expand: 'Expand menu',
         collapse: 'Collapse menu',
         home: 'Home',
-        chessTitle: 'Commited (Commit History)',
-        chess: 'Commited',
+        chessTitle: 'Dev Commits (Commit History)',
+        chess: 'Dev Commits',
         questTitle: 'Language Learning Hub',
         quest: 'Languages',
         docsTitle: 'Documentation & Ethos',
@@ -68,8 +68,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
 
         <button
-          className={`sidebar-link ${activePage === 'quest' ? 'active' : ''}`}
-          onClick={() => setActivePage('quest')}
+          className={`sidebar-link ${activePage === 'languages' ? 'active' : ''}`}
+          onClick={() => setActivePage('languages')}
           title={copy.questTitle}
         >
           <span className="sidebar-icon"><IconGlobe size={18} /></span>
@@ -77,8 +77,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
 
         <button
-          className={`sidebar-link ${activePage === 'chess' ? 'active' : ''}`}
-          onClick={() => setActivePage('chess')}
+          className={`sidebar-link ${activePage === 'commits' ? 'active' : ''}`}
+          onClick={() => setActivePage('commits')}
           title={copy.chessTitle}
         >
           <span className="sidebar-icon"><IconChess size={18} /></span>

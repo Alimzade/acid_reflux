@@ -1,5 +1,13 @@
 export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 
+export interface NounMetadata {
+  word: string;
+  article: 'der' | 'die' | 'das';
+  gender: 'masculine' | 'feminine' | 'neuter';
+  noteEn?: string;
+  noteDe?: string;
+}
+
 export interface EssentialPhrase {
   category: 'greetings' | 'basics' | 'travel' | 'social' | 'idioms' | 'advanced';
   level: CefrLevel;
@@ -7,6 +15,7 @@ export interface EssentialPhrase {
   pronunciation: string;
   en: string;
   de: string;
+  nouns?: NounMetadata[];
 }
 
 export interface DailyProverb {
@@ -15,6 +24,16 @@ export interface DailyProverb {
   en: string;
   de: string;
   literal: string;
+  level: CefrLevel;
+  nouns?: NounMetadata[];
+}
+
+export interface GrammarTip {
+  titleEn: string;
+  titleDe: string;
+  tipEn: string;
+  tipDe: string;
+  example?: string;
   level: CefrLevel;
 }
 
@@ -40,6 +59,8 @@ export interface LanguageInfo {
     de: string;
   };
   dailyPhrases: DailyProverb[];
+  grammarTip?: GrammarTip;
+  grammarTips?: GrammarTip[];
 }
 
 export function getAvailableDates(): string[] {
@@ -67,47 +88,81 @@ export const TOP_33_LANGUAGES: LanguageInfo[] = [
     greeting: { phrase: 'Hallo! Wie geht es Ihnen?', pronunciation: 'hah-loh vee gayt es ee-nen', translationEn: 'Hello! How are you?', translationDe: 'Hallo! Wie geht es Ihnen?' },
     essentialPhrases: [
       // A1 Level
-      { category: 'greetings', level: 'A1', phrase: 'Guten Morgen', pronunciation: 'goo-ten mor-gen', en: 'Good morning', de: 'Guten Morgen' },
-      { category: 'greetings', level: 'A1', phrase: 'Guten Abend', pronunciation: 'goo-ten ah-bent', en: 'Good evening', de: 'Guten Abend' },
-      { category: 'basics', level: 'A1', phrase: 'Vielen Dank', pronunciation: 'fee-len dank', en: 'Thank you very much', de: 'Vielen Dank' },
-      { category: 'basics', level: 'A1', phrase: 'Entschuldigung', pronunciation: 'ent-shool-dee-goong', en: 'Excuse me', de: 'Entschuldigung' },
+      { category: 'greetings', level: 'A1', phrase: 'Guten Morgen', pronunciation: 'goo-ten mor-gen', en: 'Good morning', de: 'Guten Morgen', nouns: [{ word: 'Morgen', article: 'der', gender: 'masculine' }] },
+      { category: 'greetings', level: 'A1', phrase: 'Guten Abend', pronunciation: 'goo-ten ah-bent', en: 'Good evening', de: 'Guten Abend', nouns: [{ word: 'Abend', article: 'der', gender: 'masculine' }] },
+      { category: 'basics', level: 'A1', phrase: 'Vielen Dank', pronunciation: 'fee-len dank', en: 'Thank you very much', de: 'Vielen Dank', nouns: [{ word: 'Dank', article: 'der', gender: 'masculine' }] },
+      { category: 'basics', level: 'A1', phrase: 'Entschuldigung', pronunciation: 'ent-shool-dee-goong', en: 'Excuse me', de: 'Entschuldigung', nouns: [{ word: 'Entschuldigung', article: 'die', gender: 'feminine' }] },
       { category: 'basics', level: 'A1', phrase: 'Ich heiße...', pronunciation: 'ikh hy-seh', en: 'My name is...', de: 'Ich heiße...' },
 
       // A2 Level
-      { category: 'travel', level: 'A2', phrase: 'Wo ist der Bahnhof?', pronunciation: 'voh ist dair bahn-hof', en: 'Where is the station?', de: 'Wo ist der Bahnhof?' },
+      { category: 'travel', level: 'A2', phrase: 'Wo ist der Bahnhof?', pronunciation: 'voh ist dair bahn-hof', en: 'Where is the station?', de: 'Wo ist der Bahnhof?', nouns: [{ word: 'Bahnhof', article: 'der', gender: 'masculine' }] },
       { category: 'travel', level: 'A2', phrase: 'Wie viel kostet das?', pronunciation: 'vee feel kos-tet das', en: 'How much does this cost?', de: 'Wie viel kostet das?' },
       { category: 'social', level: 'A2', phrase: 'Schön, Sie kennenzulernen', pronunciation: 'shuhn zee ken-nen-tzoo-lair-nen', en: 'Nice to meet you', de: 'Schön, Sie kennenzulernen' },
-      { category: 'social', level: 'A2', phrase: 'Ich hätte gerne einen Kaffee', pronunciation: 'ikh het-teh gair-neh ey-nen kaf-fee', en: 'I would like a coffee', de: 'Ich hätte gerne einen Kaffee' },
+      { category: 'social', level: 'A2', phrase: 'Ich hätte gerne einen Kaffee', pronunciation: 'ikh het-teh gair-neh ey-nen kaf-fee', en: 'I would like a coffee', de: 'Ich hätte gerne einen Kaffee', nouns: [{ word: 'Kaffee', article: 'der', gender: 'masculine', noteEn: 'Accusative case: einen Kaffee', noteDe: 'Akkusativ: einen Kaffee' }] },
 
       // B1 Level
-      { category: 'social', level: 'B1', phrase: 'Ich lerne seit sechs Monaten Deutsch', pronunciation: 'ikh lair-neh zayt zeks moh-nah-ten doytsh', en: 'I have been learning German for six months', de: 'Ich lerne seit sechs Monaten Deutsch' },
+      { category: 'social', level: 'B1', phrase: 'Ich lerne seit sechs Monaten Deutsch', pronunciation: 'ikh lair-neh zayt zeks moh-nah-ten doytsh', en: 'I have been learning German for six months', de: 'Ich lerne seit sechs Monaten Deutsch', nouns: [{ word: 'Monaten', article: 'der', gender: 'masculine', noteEn: 'Plural dative of der Monat', noteDe: 'Dativ Plural von der Monat' }] },
       { category: 'social', level: 'B1', phrase: 'Könnten Sie das bitte wiederholen?', pronunciation: 'kuhn-ten zee das beet-teh vee-dair-hoh-len', en: 'Could you please repeat that?', de: 'Könnten Sie das bitte wiederholen?' },
-      { category: 'travel', level: 'B1', phrase: 'Wissen Sie, ob der Zug pünktlich ist?', pronunciation: 'vis-sen zee op dair tsoog puenkt-likh ist', en: 'Do you know if the train is on time?', de: 'Wissen Sie, ob der Zug pünktlich ist?' },
-      { category: 'basics', level: 'B1', phrase: 'Ich verstehe den Zusammenhang nicht', pronunciation: 'ikh fair-shtay-eh den tzoo-zam-men-hang', en: 'I do not understand the context', de: 'Ich verstehe den Zusammenhang nicht' },
+      { category: 'travel', level: 'B1', phrase: 'Wissen Sie, ob der Zug pünktlich ist?', pronunciation: 'vis-sen zee op dair tsoog puenkt-likh ist', en: 'Do you know if the train is on time?', de: 'Wissen Sie, ob der Zug pünktlich ist?', nouns: [{ word: 'Zug', article: 'der', gender: 'masculine' }] },
+      { category: 'basics', level: 'B1', phrase: 'Ich verstehe den Zusammenhang nicht', pronunciation: 'ikh fair-shtay-eh den tzoo-zam-men-hang', en: 'I do not understand the context', de: 'Ich verstehe den Zusammenhang nicht', nouns: [{ word: 'Zusammenhang', article: 'der', gender: 'masculine', noteEn: 'Accusative case: den Zusammenhang', noteDe: 'Akkusativ: den Zusammenhang' }] },
 
       // B2 Level
-      { category: 'social', level: 'B2', phrase: 'Meiner Meinung nach ist das sehr wichtig', pronunciation: 'my-ner my-noong nakh ist das zair vikh-tikh', en: 'In my opinion that is very important', de: 'Meiner Meinung nach ist das sehr wichtig' },
+      { category: 'social', level: 'B2', phrase: 'Meiner Meinung nach ist das sehr wichtig', pronunciation: 'my-ner my-noong nakh ist das zair vikh-tikh', en: 'In my opinion that is very important', de: 'Meiner Meinung nach ist das sehr wichtig', nouns: [{ word: 'Meinung', article: 'die', gender: 'feminine', noteEn: 'Dative case: meiner Meinung', noteDe: 'Dativ: meiner Meinung' }] },
       { category: 'advanced', level: 'B2', phrase: 'Es kommt ganz darauf an', pronunciation: 'es kohmt gantz dah-rawf an', en: 'It depends entirely on the situation', de: 'Es kommt ganz darauf an' },
-      { category: 'advanced', level: 'B2', phrase: 'Wir sollten alle Optionen abwägen', pronunciation: 'veer zohl-ten al-leh op-tsyoh-nen ap-vay-gen', en: 'We should weigh all options', de: 'Wir sollten alle Optionen abwägen' },
-      { category: 'social', level: 'B2', phrase: 'Ich schätze Ihre ehrliche Rückmeldung sehr', pronunciation: 'ikh shet-tzeh ee-reh air-lee-kheh roek-mel-doong', en: 'I greatly appreciate your honest feedback', de: 'Ich schätze Ihre ehrliche Rückmeldung sehr' },
+      { category: 'advanced', level: 'B2', phrase: 'Wir sollten alle Optionen abwägen', pronunciation: 'veer zohl-ten al-leh op-tsyoh-nen ap-vay-gen', en: 'We should weigh all options', de: 'Wir sollten alle Optionen abwägen', nouns: [{ word: 'Optionen', article: 'die', gender: 'feminine', noteEn: 'Plural of die Option', noteDe: 'Plural von die Option' }] },
+      { category: 'social', level: 'B2', phrase: 'Ich schätze Ihre ehrliche Rückmeldung sehr', pronunciation: 'ikh shet-tzeh ee-reh air-lee-kheh roek-mel-doong', en: 'I greatly appreciate your honest feedback', de: 'Ich schätze Ihre ehrliche Rückmeldung sehr', nouns: [{ word: 'Rückmeldung', article: 'die', gender: 'feminine' }] },
 
       // C1 Level
-      { category: 'advanced', level: 'C1', phrase: 'Man sollte nicht alles auf eine Karte setzen', pronunciation: 'man zohl-teh nikht al-les owf ey-neh kar-teh zet-zen', en: 'Don’t put all eggs in one basket', de: 'Man sollte nicht alles auf eine Karte setzen' },
-      { category: 'advanced', level: 'C1', phrase: 'Das steht völlig außer Frage', pronunciation: 'das shtayt fuhl-likh ow-ser frah-geh', en: 'That is completely out of the question', de: 'Das steht völlig außer Frage' },
-      { category: 'advanced', level: 'C1', phrase: 'Unter diesen Umständen ist das verständlich', pronunciation: 'oon-ter dee-zen oom-shten-den ist fair-shten-likh', en: 'Under these circumstances that is understandable', de: 'Unter diesen Umständen ist das verständlich' },
-      { category: 'advanced', level: 'C1', phrase: 'Es gilt, eine nachhaltige Lösung zu finden', pronunciation: 'es geelt ey-neh naakh-hal-tee-geh luh-soong', en: 'The goal is to find a sustainable solution', de: 'Es gilt, eine nachhaltige Lösung zu finden' },
+      { category: 'advanced', level: 'C1', phrase: 'Man sollte nicht alles auf eine Karte setzen', pronunciation: 'man zohl-teh nikht al-les owf ey-neh kar-teh zet-zen', en: 'Don’t put all eggs in one basket', de: 'Man sollte nicht alles auf eine Karte setzen', nouns: [{ word: 'Karte', article: 'die', gender: 'feminine', noteEn: 'Accusative case: eine Karte', noteDe: 'Akkusativ: eine Karte' }] },
+      { category: 'advanced', level: 'C1', phrase: 'Das steht völlig außer Frage', pronunciation: 'das shtayt fuhl-likh ow-ser frah-geh', en: 'That is completely out of the question', de: 'Das steht völlig außer Frage', nouns: [{ word: 'Frage', article: 'die', gender: 'feminine', noteEn: 'Dative case: außer Frage', noteDe: 'Dativ: außer Frage' }] },
+      { category: 'advanced', level: 'C1', phrase: 'Unter diesen Umständen ist das verständlich', pronunciation: 'oon-ter dee-zen oom-shten-den ist fair-shten-likh', en: 'Under these circumstances that is understandable', de: 'Unter diesen Umständen ist das verständlich', nouns: [{ word: 'Umständen', article: 'der', gender: 'masculine', noteEn: 'Plural dative of der Umstand', noteDe: 'Dativ Plural von der Umstand' }] },
+      { category: 'advanced', level: 'C1', phrase: 'Es gilt, eine nachhaltige Lösung zu finden', pronunciation: 'es geelt ey-neh naakh-hal-tee-geh luh-soong', en: 'The goal is to find a sustainable solution', de: 'Es gilt, eine nachhaltige Lösung zu finden', nouns: [{ word: 'Lösung', article: 'die', gender: 'feminine', noteEn: 'Accusative case: eine Lösung', noteDe: 'Akkusativ: eine Lösung' }] },
 
       // C2 Level
-      { category: 'advanced', level: 'C2', phrase: 'Der Apfel fällt nicht weit vom Stamm', pronunciation: 'dair ap-fel felt nikht vyt fohm shtam', en: 'The apple doesn’t fall far from the tree', de: 'Der Apfel fällt nicht weit vom Stamm' },
-      { category: 'advanced', level: 'C2', phrase: 'In der Kürze liegt die Würze', pronunciation: 'een dair kuer-tzeh leegt dee wuer-tzeh', en: 'Brevity is the soul of wit', de: 'In der Kürze liegt die Würze' },
+      { category: 'advanced', level: 'C2', phrase: 'Der Apfel fällt nicht weit vom Stamm', pronunciation: 'dair ap-fel felt nikht vyt fohm shtam', en: 'The apple doesn’t fall far from the tree', de: 'Der Apfel fällt nicht weit vom Stamm', nouns: [{ word: 'Apfel', article: 'der', gender: 'masculine' }, { word: 'Stamm', article: 'der', gender: 'masculine', noteEn: 'Dative contraction: vom (von dem) Stamm', noteDe: 'Dativ-Kombination: vom Stamm' }] },
+      { category: 'advanced', level: 'C2', phrase: 'In der Kürze liegt die Würze', pronunciation: 'een dair kuer-tzeh leegt dee wuer-tzeh', en: 'Brevity is the soul of wit', de: 'In der Kürze liegt die Würze', nouns: [{ word: 'Kürze', article: 'die', gender: 'feminine', noteEn: 'Dative case: in der Kürze', noteDe: 'Dativ: in der Kürze' }, { word: 'Würze', article: 'die', gender: 'feminine' }] },
       { category: 'advanced', level: 'C2', phrase: 'Was du heute kannst besorgen, das verschiebe nicht auf morgen', pronunciation: 'vas doo hoy-teh kanst beh-zor-gen fair-shee-beh', en: 'Never put off till tomorrow what you can do today', de: 'Was du heute kannst besorgen, das verschiebe nicht auf morgen' },
-      { category: 'advanced', level: 'C2', phrase: 'Da liegt der Hund begraben', pronunciation: 'dah leegt dair hoond beh-grah-ben', en: 'That is the crux of the matter', de: 'Da liegt der Hund begraben' }
+      { category: 'advanced', level: 'C2', phrase: 'Da liegt der Hund begraben', pronunciation: 'dah leegt dair hoond beh-grah-ben', en: 'That is the crux of the matter', de: 'Da liegt der Hund begraben', nouns: [{ word: 'Hund', article: 'der', gender: 'masculine' }] }
     ],
     trivia: { en: 'Famous for compound words and regional dialects.', de: 'Berühmt für zusammengesetzte Wörter und Dialekte.' },
     dailyPhrases: [
       { phrase: 'Übung macht den Meister', pronunciation: 'oo-boong makht dain my-stair', en: 'Practice makes perfect', de: 'Übung macht den Meister', literal: 'Practice makes master', level: 'A2' },
       { phrase: 'Morgenstund hat Gold im Mund', pronunciation: 'mor-gen-shtoond hat gohlt im moond', en: 'Early bird catches the worm', de: 'Morgenstund hat Gold im Mund', literal: 'Morning hour has gold in mouth', level: 'B1' },
       { phrase: 'Aller Anfang ist schwer', pronunciation: 'al-ler an-fang ist shwair', en: 'Every beginning is hard', de: 'Aller Anfang ist schwer', literal: 'All beginning is hard', level: 'B2' }
+    ],
+    grammarTips: [
+      {
+        titleEn: 'Case Signals & Accusative Nouns',
+        titleDe: 'Fall-Signale & Akkusativ-Nomen',
+        tipEn: 'Masculine nouns change "der" to "den" in the accusative case (direct object). Hover over dotted words in phrases to check dictionary articles & case notes!',
+        tipDe: 'Maskuline Nomen ändern "der" zu "den" im Akkusativ (direktes Objekt). Fahren Sie mit der Maus über gepunktete Wörter für Artikel!',
+        example: 'der Zusammenhang → den Zusammenhang',
+        level: 'B1'
+      },
+      {
+        titleEn: 'Dative Case Prepositions',
+        titleDe: 'Dativ-Präpositionen (Aus, bei, mit...)',
+        tipEn: 'The prepositions "aus, bei, mit, nach, seit, von, zu" ALWAYS take the dative case.',
+        tipDe: 'Die Präpositionen "aus, bei, mit, nach, seit, von, zu" verlangen IMMER den Dativ.',
+        example: 'mit dem Zug / nach der Schule',
+        level: 'B1'
+      },
+      {
+        titleEn: 'Two-Way Prepositions (Wechselpräpositionen)',
+        titleDe: 'Wechselpräpositionen (in, an, auf...)',
+        tipEn: 'Prepositions like "in, an, auf" use Accusative for movement/direction (Wohin?) and Dative for fixed location (Wo?).',
+        tipDe: 'Wechselpräpositionen nutzen Akkusativ für Bewegung (Wohin?) und Dativ für Orte (Wo?).',
+        example: 'in den Bahnhof (Akk) / im Bahnhof (Dat)',
+        level: 'B2'
+      },
+      {
+        titleEn: 'Modal Verbs & Verb Position',
+        titleDe: 'Modalverben & Satzstellung',
+        tipEn: 'Modal verbs (können, müssen, sollten) conjugate in second position and send the main verb to the very end in infinitive.',
+        tipDe: 'Modalverben stehen an 2. Stelle und schicken das Vollverb im Infinitiv ans Satzende.',
+        example: 'Wir sollten alle Optionen abwägen.',
+        level: 'B2'
+      }
     ]
   },
   {

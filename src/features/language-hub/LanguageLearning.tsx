@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Language } from '../../types';
-import { TOP_33_LANGUAGES, LanguageInfo, CefrLevel, getAvailableDates, DailyProverb } from './languageData';
+import { TOP_33_LANGUAGES, LanguageInfo, CefrLevel, getAvailableDates, DailyProverb, NounMetadata } from './languageData';
 import { IconChevronLeft, IconChevronRight } from '../../components/Icons';
 import './LanguageLearning.css';
 
@@ -8,13 +8,69 @@ interface LanguageLearningProps {
   language: Language;
 }
 
+function RenderPhraseWithTooltips({
+  phrase,
+  nouns,
+  isGerman
+}: {
+  phrase: string;
+  nouns?: NounMetadata[];
+  isGerman: boolean;
+}) {
+  if (!nouns || !nouns.length) {
+    return <>{phrase}</>;
+  }
+
+  const pattern = new RegExp(`(${nouns.map(n => n.word.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|')})`, 'g');
+  const parts = phrase.split(pattern);
+
+  return (
+    <>
+      {parts.map((part, idx) => {
+        const nounMeta = nouns.find(n => n.word === part);
+        if (!nounMeta) {
+          return <span key={idx}>{part}</span>;
+        }
+
+        const genderLabel = nounMeta.gender === 'masculine'
+          ? (isGerman ? 'Maskulin' : 'Masculine')
+          : nounMeta.gender === 'feminine'
+          ? (isGerman ? 'Feminin' : 'Feminine')
+          : (isGerman ? 'Neutrum' : 'Neuter');
+
+        const genderClass = `gender-${nounMeta.gender}`;
+        const note = isGerman ? nounMeta.noteDe : nounMeta.noteEn;
+
+        return (
+          <span key={idx} className="noun-hover-target" tabIndex={0}>
+            {part}
+            <span className="noun-tooltip glass-card">
+              <span className="tooltip-header">
+                <strong>{nounMeta.article}</strong> {part}
+              </span>
+              <span className={`tooltip-gender-badge ${genderClass}`}>
+                {genderLabel}
+              </span>
+              {note && <span className="tooltip-note">{note}</span>}
+            </span>
+          </span>
+        );
+      })}
+    </>
+  );
+}
+
 export function LanguageLearning({ language }: LanguageLearningProps) {
   const isGerman = language === 'de';
   const availableDates = useMemo(() => getAvailableDates(), []);
   const [selectedDate, setSelectedDate] = useState<string>(availableDates[0]);
-  const [selectedId, setSelectedId] = useState<string>('german');
+  const [selectedId, setSelectedId] = useState<string>(
+    () => localStorage.getItem('ll_selectedId') || 'german'
+  );
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [activeLevel, setActiveLevel] = useState<string>('all');
+  const [activeLevel, setActiveLevel] = useState<string>(
+    () => localStorage.getItem('ll_activeLevel') || 'A1'
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [typeBuffer, setTypeBuffer] = useState<string>('');
   const [flashcardIndex, setFlashcardIndex] = useState<number>(0);
@@ -44,6 +100,21 @@ export function LanguageLearning({ language }: LanguageLearningProps) {
     if (hasNewer) setSelectedDate(availableDates[currentDateIndex - 1]);
   };
 
+  // Persist selections to localStorage
+  const handleSetSelectedId = (id: string) => {
+    setSelectedId(id);
+    localStorage.setItem('ll_selectedId', id);
+    setFlashcardIndex(0);
+    setIsFlipped(false);
+  };
+
+  const handleSetActiveLevel = (lvl: string) => {
+    setActiveLevel(lvl);
+    localStorage.setItem('ll_activeLevel', lvl);
+    setFlashcardIndex(0);
+    setIsFlipped(false);
+  };
+
   const currentLang = useMemo(() => {
     return TOP_33_LANGUAGES.find(l => l.id === selectedId) || TOP_33_LANGUAGES[0];
   }, [selectedId]);
@@ -64,6 +135,15 @@ export function LanguageLearning({ language }: LanguageLearningProps) {
     const dateSeed = selectedDate.split('-').reduce((acc, p) => acc * 31 + parseInt(p, 10), 0);
     const idx = Math.abs(dateSeed) % list.length;
     return list[idx];
+  }, [currentLang, selectedDate]);
+
+  // Determine daily grammar tip for the selected date deterministically using date hash
+  const currentGrammarTip = useMemo(() => {
+    const tips = currentLang.grammarTips || (currentLang.grammarTip ? [currentLang.grammarTip] : []);
+    if (!tips.length) return null;
+    const dateSeed = selectedDate.split('-').reduce((acc, p) => acc * 31 + parseInt(p, 10), 0);
+    const idx = Math.abs(dateSeed) % tips.length;
+    return tips[idx];
   }, [currentLang, selectedDate]);
 
   // Direct keyboard type-ahead searching (No search box needed!)
@@ -284,7 +364,7 @@ export function LanguageLearning({ language }: LanguageLearningProps) {
                       type="button"
                       className={`option-item ${lang.id === selectedId ? 'selected' : ''}`}
                       onClick={() => {
-                        setSelectedId(lang.id);
+                        handleSetSelectedId(lang.id);
                         setIsDropdownOpen(false);
                       }}
                     >
@@ -335,7 +415,7 @@ export function LanguageLearning({ language }: LanguageLearningProps) {
               <button
                 key={lvl}
                 className={`level-pill level-${lvl.toLowerCase()} ${activeLevel === lvl ? 'active' : ''}`}
-                onClick={() => setActiveLevel(lvl)}
+                onClick={() => handleSetActiveLevel(lvl)}
               >
                 {lvl === 'all' ? (isGerman ? 'Alle' : 'All') : lvl}
               </button>
@@ -382,61 +462,150 @@ export function LanguageLearning({ language }: LanguageLearningProps) {
         </div>
       </div>
 
-      {/* Main Content Layout: Expressions & Side Column */}
-      <div className="lang-main-layout">
-        {/* Expressions Grid */}
-        <div className="glass-card expressions-card">
-          <div className="expressions-header">
-            <h2>{copy.phrasesTitle}</h2>
-            <div className="category-tabs">
-              {(['all', 'greetings', 'basics', 'travel', 'social', 'advanced'] as const).map(cat => (
-                <button
-                  key={cat}
-                  className={`tab-btn ${activeCategory === cat ? 'active' : ''}`}
-                  onClick={() => setActiveCategory(cat)}
-                >
-                  {copy[cat as keyof typeof copy] || cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="phrases-grid">
-            {phrases.map((item, i) => (
-              <div key={i} className="phrase-card">
-                <div className="phrase-card-top">
-                  <span className={`cefr-badge badge-${item.level.toLowerCase()}`}>{item.level}</span>
-                  <span className="category-badge">{item.category}</span>
-                  <button 
-                    className="icon-speak-btn"
-                    onClick={() => speakText(item.phrase, currentLang.id)}
-                    title={copy.listenBtn}
-                  >
-                    🔊
-                  </button>
-                </div>
-                <h4 className="phrase-text">{item.phrase}</h4>
-                <span className="phrase-pronun">/ {item.pronunciation} /</span>
-                <p className="phrase-trans">{isGerman ? item.de : item.en}</p>
-              </div>
+      {/* Main Expressions Grid */}
+      <div className="glass-card expressions-card">
+        <div className="expressions-header">
+          <h2>{copy.phrasesTitle}</h2>
+          <div className="category-tabs">
+            {(['all', 'greetings', 'basics', 'travel', 'social', 'advanced'] as const).map(cat => (
+              <button
+                key={cat}
+                className={`tab-btn ${activeCategory === cat ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {copy[cat as keyof typeof copy] || cat}
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Side Column: Flashcard Trainer, Daily Proverb, Cultural Trivia */}
-        <div className="lang-side-column">
-          {/* Flashcard Trainer */}
-          <div className="glass-card flashcard-container">
+        <div className="phrases-grid">
+          {phrases.map((item, i) => (
+            <div key={i} className="phrase-card">
+              <div className="phrase-card-top">
+                <span className={`cefr-badge badge-${item.level.toLowerCase()}`}>{item.level}</span>
+                <span className="category-badge">{item.category}</span>
+                <button 
+                  className="icon-speak-btn"
+                  onClick={() => speakText(item.phrase, currentLang.id)}
+                  title={copy.listenBtn}
+                >
+                  🔊
+                </button>
+              </div>
+              <h4 className="phrase-text">
+                <RenderPhraseWithTooltips phrase={item.phrase} nouns={item.nouns} isGerman={isGerman} />
+              </h4>
+              <span className="phrase-pronun">/ {item.pronunciation} /</span>
+              <p className="phrase-trans">{isGerman ? item.de : item.en}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Daily Learning Cards (Below Expressions): Daily Proverb + Grammar Tip & Flashcard Trainer */}
+      <div className="top-cards-row">
+        {/* Left Column: Daily Proverb & Grammar Quick Tip */}
+        <div className="top-left-column">
+          {/* Daily Proverb */}
+          <div className="glass-card proverb-card">
+            <div className="proverb-header-row">
+              <h3>{copy.proverbTitle}</h3>
+              <span className={`cefr-badge badge-${currentDailyPhrase.level.toLowerCase()}`}>{currentDailyPhrase.level}</span>
+            </div>
+            <div className="proverb-content">
+              <h4 className="proverb-phrase">
+                <RenderPhraseWithTooltips phrase={currentDailyPhrase.phrase} nouns={currentDailyPhrase.nouns} isGerman={isGerman} />
+              </h4>
+              <p className="pronun">/ {currentDailyPhrase.pronunciation} /</p>
+              <p className="proverb-meaning">
+                <strong>Meaning:</strong> {isGerman ? currentDailyPhrase.de : currentDailyPhrase.en}
+              </p>
+              <p className="proverb-literal">
+                <em>{copy.literalMeaning}</em> "{currentDailyPhrase.literal}"
+              </p>
+            </div>
+          </div>
+
+          {/* Grammar Quick Tip Card */}
+          <div className="glass-card grammar-tip-card">
+            <div className="grammar-tip-header">
+              <span className="grammar-tip-badge">💡 {isGerman ? 'Grammatik-Tipp' : 'Grammar Tip'}</span>
+              {currentGrammarTip && (
+                <span className={`cefr-badge badge-${currentGrammarTip.level.toLowerCase()}`}>
+                  {currentGrammarTip.level}
+                </span>
+              )}
+            </div>
+            {currentGrammarTip ? (
+              <div className="grammar-tip-body">
+                <h4 className="grammar-tip-title">
+                  {isGerman ? currentGrammarTip.titleDe : currentGrammarTip.titleEn}
+                </h4>
+                <p className="grammar-tip-text">
+                  {isGerman ? currentGrammarTip.tipDe : currentGrammarTip.tipEn}
+                </p>
+                {currentGrammarTip.example && (
+                  <div className="grammar-tip-example">
+                    <code>{currentGrammarTip.example}</code>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="grammar-tip-body">
+                <h4 className="grammar-tip-title">
+                  {isGerman ? 'Grammatikalische Muster' : 'Grammatical Patterns'}
+                </h4>
+                <p className="grammar-tip-text">
+                  {isGerman 
+                    ? 'Achten Sie beim Lesen von Phrasen auf Nomen, Artikel und Satzmuster in dieser Sprache.' 
+                    : 'Observe nouns, articles, and sentence patterns as you explore expressions in this language.'}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: Flashcard Trainer */}
+        <div className="glass-card flashcard-container">
+          <div className="flashcard-header-row">
             <h3>{copy.practiceTitle}</h3>
+            <span className="card-counter">
+              {phrases.length > 0 ? flashcardIndex + 1 : 0} / {phrases.length}
+            </span>
+          </div>
+
+          <div className="flashcard-area-wrapper">
+            {/* Left Surrounding Click Area (Triggers Previous Card) */}
+            <div
+              className={`flashcard-click-area area-left ${flashcardIndex === 0 ? 'disabled' : ''}`}
+              onClick={() => {
+                if (flashcardIndex > 0) {
+                  setFlashcardIndex(prev => prev - 1);
+                  setIsFlipped(false);
+                }
+              }}
+              title={isGerman ? 'Vorherige Karte' : 'Previous Card'}
+              role="button"
+              tabIndex={0}
+              aria-label="Previous Flashcard"
+            />
+
+            {/* Center Flashcard (Clicking card flips it) */}
             <div 
               className={`flashcard ${isFlipped ? 'flipped' : ''}`}
-              onClick={() => setIsFlipped(!isFlipped)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsFlipped(!isFlipped);
+              }}
             >
               <div className="flashcard-inner">
                 <div className="flashcard-front">
                   <span className="flashcard-hint">{copy.flipCard}</span>
                   <span className={`cefr-badge badge-${currentFlashcard.level.toLowerCase()}`}>{currentFlashcard.level}</span>
-                  <h4>{currentFlashcard.phrase}</h4>
+                  <h4>
+                    <RenderPhraseWithTooltips phrase={currentFlashcard.phrase} nouns={currentFlashcard.nouns} isGerman={isGerman} />
+                  </h4>
                   <p className="pronun">/ {currentFlashcard.pronunciation} /</p>
                 </div>
                 <div className="flashcard-back">
@@ -448,59 +617,44 @@ export function LanguageLearning({ language }: LanguageLearningProps) {
               </div>
             </div>
 
-            <div className="flashcard-controls">
-              <button 
-                className="card-nav-btn"
-                disabled={flashcardIndex === 0}
-                onClick={() => {
-                  setFlashcardIndex(prev => Math.max(0, prev - 1));
+            {/* Right Surrounding Click Area (Triggers Next Card) */}
+            <div
+              className={`flashcard-click-area area-right ${flashcardIndex >= phrases.length - 1 ? 'disabled' : ''}`}
+              onClick={() => {
+                if (flashcardIndex < phrases.length - 1) {
+                  setFlashcardIndex(prev => prev + 1);
                   setIsFlipped(false);
-                }}
-              >
-                {copy.prevCard}
-              </button>
-
-              <span className="card-counter">
-                {phrases.length > 0 ? flashcardIndex + 1 : 0} / {phrases.length}
-              </span>
-
-              <button 
-                className="card-nav-btn"
-                disabled={flashcardIndex >= phrases.length - 1}
-                onClick={() => {
-                  setFlashcardIndex(prev => Math.min(phrases.length - 1, prev + 1));
-                  setIsFlipped(false);
-                }}
-              >
-                {copy.nextCard}
-              </button>
-            </div>
+                }
+              }}
+              title={isGerman ? 'Nächste Karte' : 'Next Card'}
+              role="button"
+              tabIndex={0}
+              aria-label="Next Flashcard"
+            />
           </div>
 
-          {/* Daily Proverb (Rotates deterministically by Selected Date) */}
-          <div className="glass-card proverb-card">
-            <div className="proverb-header-row">
-              <h3>{copy.proverbTitle}</h3>
-              <span className={`cefr-badge badge-${currentDailyPhrase.level.toLowerCase()}`}>{currentDailyPhrase.level}</span>
-            </div>
-            <div className="proverb-content">
-              <h4 className="proverb-phrase">{currentDailyPhrase.phrase}</h4>
-              <p className="pronun">/ {currentDailyPhrase.pronunciation} /</p>
-              <p className="proverb-meaning">
-                <strong>Meaning:</strong> {isGerman ? currentDailyPhrase.de : currentDailyPhrase.en}
-              </p>
-              <p className="proverb-literal">
-                <em>{copy.literalMeaning}</em> "{currentDailyPhrase.literal}"
-              </p>
-            </div>
-          </div>
+          <div className="flashcard-controls">
+            <button 
+              className="card-nav-btn"
+              disabled={flashcardIndex === 0}
+              onClick={() => {
+                setFlashcardIndex(prev => Math.max(0, prev - 1));
+                setIsFlipped(false);
+              }}
+            >
+              {copy.prevCard}
+            </button>
 
-          {/* Cultural Trivia Card */}
-          <div className="glass-card trivia-card">
-            <h3>{copy.triviaTitle}</h3>
-            <p className="trivia-text">
-              {isGerman ? currentLang.trivia.de : currentLang.trivia.en}
-            </p>
+            <button 
+              className="card-nav-btn"
+              disabled={flashcardIndex >= phrases.length - 1}
+              onClick={() => {
+                setFlashcardIndex(prev => Math.min(phrases.length - 1, prev + 1));
+                setIsFlipped(false);
+              }}
+            >
+              {copy.nextCard}
+            </button>
           </div>
         </div>
       </div>

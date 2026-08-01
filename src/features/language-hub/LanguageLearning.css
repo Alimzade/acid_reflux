@@ -443,12 +443,85 @@
   border: 1px solid rgba(236, 72, 153, 0.3);
 }
 
-/* Main Layout */
-.lang-main-layout {
+/* Top Feature Cards (Daily Proverb & Flashcard Trainer Side-by-Side) */
+.top-cards-row {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
   align-items: stretch;
+}
+
+.top-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  height: 100%;
+}
+
+/* Grammar Quick Tip Card */
+.grammar-tip-card {
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+  flex: 1;
+  border-left: 3px solid var(--accent-purple);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.85));
+}
+
+.grammar-tip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grammar-tip-badge {
+  font-family: var(--font-code);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-purple);
+  letter-spacing: 0.06em;
+}
+
+.grammar-tip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.grammar-tip-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.grammar-tip-text {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.grammar-tip-example {
+  margin-top: 0.2rem;
+  align-self: flex-start;
+}
+
+.grammar-tip-example code {
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.flashcard-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Expressions Card */
@@ -505,32 +578,32 @@
 /* Phrases Grid */
 .phrases-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.1rem;
 }
 
 .phrase-card {
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 0.9rem 1rem;
+  padding: 1.15rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.6rem;
   transition: all 0.2s ease;
 }
 
 .phrase-card:hover {
   border-color: rgba(6, 182, 212, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .phrase-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .category-badge {
@@ -539,7 +612,7 @@
   text-transform: uppercase;
   color: var(--accent-purple);
   background: rgba(168, 85, 247, 0.1);
-  padding: 0.15rem 0.45rem;
+  padding: 0.18rem 0.5rem;
   border-radius: 4px;
 }
 
@@ -547,32 +620,36 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   opacity: 0.75;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
 .icon-speak-btn:hover {
   opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .phrase-text {
-  font-size: 1.1rem;
+  font-size: 1.12rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-top: 0.15rem;
+  line-height: 1.38;
+  margin-top: 0.25rem;
+  margin-bottom: 0.1rem;
 }
 
 .phrase-pronun {
   font-family: var(--font-code);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--accent-cyan);
+  line-height: 1.35;
 }
 
 .phrase-trans {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
+  line-height: 1.42;
   margin-top: 0.15rem;
 }
 
@@ -589,7 +666,9 @@
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 0.85rem;
+  height: 100%;
   border-top: 3px solid var(--accent-purple);
 }
 
@@ -599,20 +678,66 @@
   color: var(--text-primary);
 }
 
+.flashcard-area-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.flashcard-click-area {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.flashcard-click-area.area-left {
+  left: 0;
+}
+
+.flashcard-click-area.area-right {
+  right: 0;
+}
+
+.flashcard-click-area:hover:not(.disabled) {
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.flashcard-click-area.disabled {
+  cursor: default;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 .flashcard {
   perspective: 1000px;
-  min-height: 150px;
+  min-height: 240px;
+  width: 90%;
+  z-index: 10;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0.4rem auto;
   cursor: pointer;
 }
 
 .flashcard-inner {
   width: 100%;
   height: 100%;
-  min-height: 150px;
+  min-height: 240px;
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
   border: 1px dashed rgba(168, 85, 247, 0.4);
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: 14px;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -645,9 +770,10 @@
 }
 
 .flashcard-front h4, .flashcard-back h4 {
-  font-size: 1.3rem;
+  font-size: 1.55rem;
   color: var(--text-primary);
-  margin-top: 0.3rem;
+  margin-top: 0.4rem;
+  line-height: 1.3;
 }
 
 .flashcard-front .pronun {
@@ -702,7 +828,7 @@
 
 .card-nav-btn:disabled {
   opacity: 0.35;
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .card-counter {
@@ -713,10 +839,13 @@
 
 /* Proverb Card */
 .proverb-card {
-  padding: 1.1rem;
+  padding: 1.15rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  justify-content: center;
+  gap: 0.6rem;
+  flex: 1;
+  border-left: 3px solid var(--accent-cyan);
 }
 
 .proverb-header-row {
@@ -728,24 +857,28 @@
 .proverb-content {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.3rem;
 }
 
 .proverb-phrase {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: var(--text-primary);
+  line-height: 1.35;
 }
 
 .proverb-meaning {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
-  margin-top: 0.15rem;
+  line-height: 1.4;
+  margin-top: 0.2rem;
 }
 
 .proverb-literal {
   font-size: 0.78rem;
   color: var(--accent-pink);
-  opacity: 0.9;
+  font-style: italic;
+  margin-top: 0.1rem;
 }
 
 /* Trivia Card */
@@ -765,7 +898,7 @@
 
 /* Responsive Breakpoints */
 @media (max-width: 900px) {
-  .lang-main-layout {
+  .top-cards-row {
     grid-template-columns: 1fr;
   }
 }
@@ -775,4 +908,97 @@
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* Interactive Noun Hover Target */
+.noun-hover-target {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1.5px dotted var(--accent-cyan);
+  cursor: help;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.noun-hover-target:hover,
+.noun-hover-target:focus {
+  color: var(--accent-cyan);
+  border-bottom-color: var(--accent-purple);
+}
+
+/* Glassmorphic Noun Micro-Tooltip */
+.noun-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  min-width: 140px;
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+.noun-hover-target:hover .noun-tooltip,
+.noun-hover-target:focus .noun-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltip-header {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.tooltip-header strong {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+.tooltip-gender-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.65rem;
+  font-family: var(--font-code);
+  text-transform: uppercase;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.tooltip-gender-badge.gender-masculine {
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.tooltip-gender-badge.gender-feminine {
+  background: rgba(236, 72, 153, 0.15);
+  color: var(--accent-pink);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.tooltip-gender-badge.gender-neuter {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.tooltip-note {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-style: italic;
+  white-space: normal;
+  max-width: 180px;
 }
